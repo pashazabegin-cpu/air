@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Шрифты: Geist, IBM Plex Sans, Space Grotesk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;500&family=Geist+Mono:wght@500&family=IBM+Plex+Sans:wght@200;300;500&family=Space+Grotesk:wght@300&family=Inter:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Current fonts, from the project (local only). */
+      @font-face { font-family: "Aeonik Fono"; src: url("/design-ref/fonts/AeonikFono-Light.otf"); font-weight: 300; }
+      @font-face { font-family: "Aeonik Pro"; src: url("/design-ref/fonts/AeonikPro-Light.otf"); font-weight: 300; }
+      @font-face { font-family: "Monoglyphic"; src: url("/design-ref/fonts/Monoglyphic-Medium.otf"); font-weight: 500; }
+
+      :root {
+        --page: #eef1f2;
+        --ink: #0d0f10;
+        --muted: #5f6b70;
+        --card: #fff;
+        --line: #d9dfe1;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font: 15px/1.5 "Inter", system-ui, sans-serif;
+        font-weight: 300;
+      }
+
+      header.page-head {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 48px 32px 24px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        font-weight: 300;
+        letter-spacing: -0.01em;
+      }
+
+      .page-head p {
+        margin: 0;
+        max-width: 760px;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 28px;
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 16px 32px 64px;
+      }
+
+      .option {
+        margin: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      .option.is-wide {
+        grid-column: 1 / -1;
+      }
+
+      .option figcaption {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 4px 16px;
+        padding: 16px 20px 18px;
+        border-top: 1px solid var(--line);
+      }
+
+      .option h2 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 500;
+      }
+
+      .tag {
+        align-self: start;
+        padding: 2px 10px;
+        border-radius: 99px;
+        background: #e6eef0;
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .tag--current { background: #fdecd8; color: #8a4b0f; }
+
+      .roles {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        margin: 4px 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .roles b { color: var(--ink); font-weight: 500; }
+
+      .note {
+        grid-column: 1 / -1;
+        margin: 6px 0 0;
+        font-size: 14px;
+      }
+
+      /* ---------- Hero replica: the 1440×900 artboard scaled to the card width ---------- */
+
+      .hero {
+        position: relative;
+        container-type: inline-size;
+        aspect-ratio: 1440 / 900;
+        overflow: hidden;
+        background: #fff;
+        --u: calc(100cqw / 1440);
+      }
+
+      .hero > * { position: absolute; }
+
+      .hero__bg {
+        left: 0; right: 0; bottom: 0;
+        top: calc(157 * var(--u));
+        background: linear-gradient(to bottom, #fdfdfd 12.185%, #bfe1e5 98.944%);
+      }
+
+      .hero__media {
+        left: calc(-28 * var(--u));
+        top: calc(38 * var(--u));
+        width: calc(1484 * var(--u));
+        aspect-ratio: 16 / 9;
+      }
+
+      .hero__media img { width: 100%; height: 100%; display: block; }
+
+      .hero__fade {
+        left: 0; right: 0; bottom: 0;
+        top: calc(418 * var(--u));
+        background: linear-gradient(to bottom, rgba(190, 224, 228, 0) 23.963%, #bee0e4 95.851%);
+      }
+
+      .nav {
+        left: 0; right: 0; top: 0;
+        height: calc(159 * var(--u));
+        background: #fff;
+      }
+
+      .nav > * { position: absolute; }
+
+      .logo { left: calc(60 * var(--u)); top: calc(61 * var(--u)); }
+      .logo img { width: calc(35.699 * var(--u)); height: calc(35.699 * var(--u)); display: block; }
+
+      .logo span {
+        position: absolute;
+        left: calc(48.68 * var(--u));
+        top: calc(14.13 * var(--u));
+        font-family: var(--logo);
+        font-weight: 500;
+        font-size: calc(17.021 * var(--u));
+        line-height: calc(15.091 * var(--u));
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .nav a,
+      .nav .lang {
+        top: calc(72 * var(--u));
+        font-family: var(--text);
+        font-weight: var(--text-weight, 300);
+        font-size: calc(16 * var(--u));
+        line-height: calc(19.505 * var(--u));
+        white-space: nowrap;
+        color: #707e85;
+        text-decoration: none;
+      }
+
+      .nav .lang { left: calc(1199.9 * var(--u)); color: #000; text-transform: uppercase; }
+      .nav .lang img { position: absolute; left: calc(41.6 * var(--u)); top: calc(9.1 * var(--u)); width: calc(9.8 * var(--u)); }
+
+      .icon { top: calc(67 * var(--u)); width: calc(24 * var(--u)); height: calc(24 * var(--u)); }
+      .icon--user { left: calc(1294 * var(--u)); }
+      .icon--cart { left: calc(1356 * var(--u)); }
+
+      .label {
+        top: calc(174 * var(--u));
+        font-family: var(--display);
+        font-weight: var(--label-weight, 300);
+        font-size: calc(10 * var(--u));
+        line-height: calc(40 * var(--u));
+        letter-spacing: calc(4.7 * var(--u));
+        text-transform: uppercase;
+        white-space: pre;
+      }
+
+      .label--left { left: calc(60 * var(--u)); }
+      .label--right { left: calc(1010 * var(--u)); }
+
+      .title {
+        left: calc(58 * var(--u));
+        top: calc(514 * var(--u));
+        width: calc(459 * var(--u));
+        margin: 0;
+        font-family: var(--display);
+        font-weight: var(--display-weight, 300);
+        font-size: calc(50 * var(--u));
+        line-height: calc(58 * var(--u));
+      }
+
+      .lead {
+        left: calc(1010 * var(--u));
+        top: calc(532 * var(--u));
+        width: calc(327 * var(--u));
+        margin: 0;
+        font-family: var(--text);
+        font-weight: var(--text-weight, 300);
+        font-size: calc(22 * var(--u));
+        line-height: calc(32 * var(--u));
+      }
+
+      .cta {
+        left: calc(1010 * var(--u));
+        top: calc(656 * var(--u));
+        width: calc(255 * var(--u));
+        height: calc(70 * var(--u));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url("/img/btn-preorder.svg") center / 100% 100% no-repeat;
+        color: #fff;
+        font-family: var(--text);
+        font-weight: var(--text-weight, 300);
+        font-size: calc(16 * var(--u));
+        text-transform: uppercase;
+      }
+
+      /* ---------- Side-by-side specimen ---------- */
+
+      .specimen {
+        max-width: 1480px;
+        margin: 8px auto 0;
+        padding: 0 32px;
+      }
+
+      .specimen__list {
+        margin: 0;
+        padding: 8px 24px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      .specimen__row {
+        display: grid;
+        grid-template-columns: 170px 1fr 1fr;
+        align-items: baseline;
+        gap: 24px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .specimen__row:last-child { border-bottom: 0; }
+
+      .specimen__name { color: var(--muted); font-size: 13px; }
+
+      .specimen__display {
+        font-family: var(--display);
+        font-weight: var(--display-weight, 300);
+        font-size: 40px;
+        line-height: 1.15;
+        white-space: nowrap;
+      }
+
+      .specimen__text {
+        font-family: var(--text);
+        font-weight: var(--text-weight, 300);
+        font-size: 19px;
+        line-height: 1.45;
+      }
+
+      /* ---------- Font sets ---------- */
+
+      .set-current { --display: "Aeonik Fono", monospace; --text: "Aeonik Pro", sans-serif; --logo: "Monoglyphic", monospace; }
+      /* A: Geist ExtraLight for headings, IBM Plex Sans for copy */
+      .set-a { --display: "Geist", sans-serif; --display-weight: 200; --label-weight: 300; --text: "IBM Plex Sans", sans-serif; --text-weight: 300; --logo: "Geist Mono", monospace; }
+      /* B: the other way round */
+      .set-b { --display: "IBM Plex Sans", sans-serif; --display-weight: 200; --label-weight: 300; --text: "Geist", sans-serif; --text-weight: 200; --logo: "Geist Mono", monospace; }
+      /* C, D: Space Grotesk Light for headings */
+      .set-c { --display: "Space Grotesk", sans-serif; --display-weight: 300; --label-weight: 300; --text: "IBM Plex Sans", sans-serif; --text-weight: 300; --logo: "Geist Mono", monospace; }
+      .set-d { --display: "Space Grotesk", sans-serif; --display-weight: 300; --label-weight: 300; --text: "Geist", sans-serif; --text-weight: 300; --logo: "Geist Mono", monospace; }
+    </style>
+  </head>
+  <body>
+    <header class="page-head">
+      <h1>Geist ExtraLight, IBM Plex Sans, Space Grotesk Light</h1>
+      <p>
+        Четыре сочетания и текущий Aeonik для сравнения. Все шрифты бесплатные (OFL).
+        Лейблы («NEW MODEL • AERON 2/0») оставлены в весе 300: в 10 px ExtraLight превращается в волосок.
+        Логотип — Geist Mono Medium, самый близкий к Monoglyphic.
+      </p>
+    </header>
+
+    <section class="specimen" aria-label="Сравнение">
+      <div class="specimen__list">
+        <div class="specimen__row set-current"><span class="specimen__name">Сейчас · Aeonik</span><span class="specimen__display">Breathe the cleanest</span><span class="specimen__text">Sourced air, blended to your spec, flown to your door across Europe.</span></div>
+        <div class="specimen__row set-a"><span class="specimen__name">А · Geist 200 / Plex Sans 300</span><span class="specimen__display">Breathe the cleanest</span><span class="specimen__text">Sourced air, blended to your spec, flown to your door across Europe.</span></div>
+        <div class="specimen__row set-b"><span class="specimen__name">Б · Plex Sans 200 / Geist 200</span><span class="specimen__display">Breathe the cleanest</span><span class="specimen__text">Sourced air, blended to your spec, flown to your door across Europe.</span></div>
+        <div class="specimen__row set-c"><span class="specimen__name">В · Space Grotesk 300 / Plex Sans 300</span><span class="specimen__display">Breathe the cleanest</span><span class="specimen__text">Sourced air, blended to your spec, flown to your door across Europe.</span></div>
+        <div class="specimen__row set-d"><span class="specimen__name">Г · Space Grotesk 300 / Geist 300</span><span class="specimen__display">Breathe the cleanest</span><span class="specimen__text">Sourced air, blended to your spec, flown to your door across Europe.</span></div>
+      </div>
+    </section>
+
+    <main class="grid">
+      <template id="hero">
+        <div class="hero">
+          <div class="hero__bg"></div>
+          <div class="hero__media"><img src="/frames/hero/000.webp" alt="" /></div>
+          <div class="hero__fade"></div>
+          <div class="nav">
+            <div class="logo"><img src="/img/logo-mark.svg" alt="" /><span>Airscape</span></div>
+            <a style="left: calc(476 * var(--u))">About</a>
+            <a style="left: calc(614.9 * var(--u))">Product</a>
+            <a style="left: calc(766 * var(--u))">Delivery</a>
+            <a style="left: calc(916.1 * var(--u))">Format</a>
+            <span class="lang">Eng<img src="/img/icon-chevron.svg" alt="" /></span>
+            <img class="icon icon--user" src="/img/icon-user.svg" alt="" />
+            <img class="icon icon--cart" src="/img/icon-cart.svg" alt="" />
+          </div>
+          <p class="label label--left">New model     •     aeron 2/0 </p>
+          <p class="label label--right">your   New                       air</p>
+          <h3 class="title">Breathe<br />the cleanest<br />places</h3>
+          <p class="lead">Sourced air, blended to your spec, flown to your door across Europe.</p>
+          <div class="cta">Pre-order now</div>
+        </div>
+      </template>
+
+      <figure class="option set-a">
+        <figcaption>
+          <h2>А. Заголовки Geist ExtraLight, текст IBM Plex Sans</h2>
+          <span class="tag">как в запросе</span>
+          <ul class="roles">
+            <li>Заголовки: <b>Geist ExtraLight 200</b></li>
+            <li>Лейблы: <b>Geist Light 300</b></li>
+            <li>Текст, меню, кнопки: <b>IBM Plex Sans Light 300</b></li>
+            <li>Логотип: <b>Geist Mono Medium</b></li>
+          </ul>
+        </figcaption>
+      </figure>
+
+      <figure class="option set-b">
+        <figcaption>
+          <h2>Б. Заголовки IBM Plex Sans ExtraLight, текст Geist ExtraLight</h2>
+          <span class="tag">роли наоборот</span>
+          <ul class="roles">
+            <li>Заголовки: <b>IBM Plex Sans ExtraLight 200</b></li>
+            <li>Лейблы: <b>IBM Plex Sans Light 300</b></li>
+            <li>Текст, меню, кнопки: <b>Geist ExtraLight 200</b></li>
+            <li>Логотип: <b>Geist Mono Medium</b></li>
+          </ul>
+        </figcaption>
+      </figure>
+
+      <figure class="option set-c">
+        <figcaption>
+          <h2>В. Заголовки Space Grotesk Light, текст IBM Plex Sans</h2>
+          <span class="tag">Space Grotesk</span>
+          <ul class="roles">
+            <li>Заголовки и лейблы: <b>Space Grotesk Light 300</b></li>
+            <li>Текст, меню, кнопки: <b>IBM Plex Sans Light 300</b></li>
+            <li>Логотип: <b>Geist Mono Medium</b></li>
+          </ul>
+        </figcaption>
+      </figure>
+
+      <figure class="option set-d">
+        <figcaption>
+          <h2>Г. Заголовки Space Grotesk Light, текст Geist Light</h2>
+          <span class="tag">Space Grotesk</span>
+          <ul class="roles">
+            <li>Заголовки и лейблы: <b>Space Grotesk Light 300</b></li>
+            <li>Текст, меню, кнопки: <b>Geist Light 300</b></li>
+            <li>Логотип: <b>Geist Mono Medium</b></li>
+          </ul>
+        </figcaption>
+      </figure>
+
+      <figure class="option set-current">
+        <figcaption>
+          <h2>Сейчас: Aeonik Fono + Aeonik Pro</h2>
+          <span class="tag tag--current">для сравнения</span>
+          <ul class="roles">
+            <li>Заголовки и лейблы: <b>Aeonik Fono Light</b></li>
+            <li>Текст и меню: <b>Aeonik Pro Light</b></li>
+            <li>Логотип: <b>Monoglyphic Medium</b></li>
+          </ul>
+        </figcaption>
+      </figure>
+    </main>
+
+    <script>
+      const tpl = document.getElementById("hero");
+      document.querySelectorAll(".option").forEach((option) => {
+        option.prepend(tpl.content.cloneNode(true));
+      });
+    </script>
+  </body>
+</html>

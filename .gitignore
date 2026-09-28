@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+scripts/.cache
+
+# Licensed fonts: local comparison only, never publish
+design-ref/fonts

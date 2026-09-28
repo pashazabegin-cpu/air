@@ -1,0 +1,1079 @@
+/* Coordinates below are the Figma artboard values (1440 wide), multiplied by --u. */
+
+/* ================= Hero (pinned while she turns, then scrolls into About) ================= */
+
+.hero {
+  position: relative;
+  /* one screen of stage + one screen of scroll for the turn */
+  height: 200vh;
+}
+
+.hero__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.hero__bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(92 * var(--u));
+  bottom: 0;
+  background: linear-gradient(to bottom, #fdfdfd 12.185%, #bfe1e5 98.944%);
+}
+
+/* Video box registered against the design still: frame 6.0s lands exactly on the Figma hero. */
+.hero__media {
+  position: absolute;
+  left: calc(-28 * var(--u));
+  top: calc(38 * var(--u));
+  width: calc(1484 * var(--u));
+  aspect-ratio: 16 / 9;
+}
+
+.hero__video,
+.hero__frames {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero__frames {
+  opacity: 0;
+}
+
+.hero__fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(418 * var(--u));
+  bottom: 0;
+  /* Ends on the exact top colour of the About clip (#cbe6ea, sampled from its first frame),
+     so the turned hero hands over to About without a band. */
+  background: linear-gradient(to bottom, rgba(203, 230, 234, 0) 23.963%, #cbe6ea 92%);
+}
+
+/* ---------- Header ----------
+   Two states from the Figma file: the full header (92 tall, frame 51:5) and, once the page
+   scrolls, a compact bar of frosted glass (33 tall, frame 59:445). Parts move by transform only,
+   so the switch plays as one animation. The glass is backdrop-filter rather than liquidGL: that
+   refracts a still snapshot of the page, which can't follow the videos and orbs passing under a
+   fixed bar. Frosted harder than the About cards. Over the dark end of the page the menu turns
+   white, and it leaves once the footer (with its own menu) comes in: src/lib/header.ts. */
+.nav {
+  --nav-ease: 0.6s var(--ease-out);
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  height: calc(92 * var(--u));
+  background-color: rgb(255 255 255 / 1);
+  backdrop-filter: blur(0) saturate(100%);
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+  transition:
+    height var(--nav-ease),
+    background-color var(--nav-ease),
+    backdrop-filter var(--nav-ease),
+    -webkit-backdrop-filter var(--nav-ease),
+    transform var(--nav-ease),
+    opacity var(--nav-ease);
+}
+
+.nav.is-compact {
+  height: calc(33 * var(--u));
+  background-color: rgb(255 255 255 / 0.2);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+.nav.is-compact.is-dark {
+  background-color: rgb(10 14 22 / 0.2);
+}
+
+.nav.is-away {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav.is-arriving,
+.nav.is-arriving * {
+  transition: none !important;
+}
+
+.nav__logo {
+  left: calc(60 * var(--u));
+  top: calc(33 * var(--u));
+  /* the header logo is the footer one at 26.96 / 35.699 */
+  transform: scale(0.7552);
+  transform-origin: 0 0;
+  transition: transform var(--nav-ease);
+}
+
+/* Compact: only the mark, 18 px, at top 8. */
+.nav.is-compact .nav__logo {
+  transform: translateY(calc(-25 * var(--u))) scale(0.5042);
+}
+
+.nav__logo .logo__word {
+  transition:
+    opacity 0.35s var(--ease-out),
+    filter 0.35s var(--ease-out),
+    transform var(--nav-ease);
+}
+
+.nav.is-compact .nav__logo .logo__word {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateX(calc(-12 * var(--u)));
+}
+
+.nav__links a {
+  position: absolute;
+  top: calc(40 * var(--u));
+  font-size: calc(12 * var(--u));
+  line-height: calc(19.505 * var(--u));
+  white-space: nowrap;
+  color: var(--nav-link);
+  transform-origin: 0 50%;
+  transition:
+    color 0.4s var(--ease-out),
+    transform var(--nav-ease);
+}
+
+/* Compact: 10 px black, centred on the bar (49.75 → 16.5). */
+.nav.is-compact .nav__links a {
+  color: var(--ink);
+  transform: translateY(calc(-33.25 * var(--u))) scale(0.8333);
+}
+
+.nav__links a:hover {
+  color: var(--ink);
+}
+
+.nav.is-compact .nav__links a:hover {
+  color: var(--nav-link);
+}
+
+.nav.is-dark .nav__links a {
+  color: rgb(255 255 255 / 0.75);
+}
+
+.nav.is-dark .nav__links a:hover {
+  color: var(--paper);
+}
+
+/* The mark and the icons are black SVGs: inverted to white over the dark end of the page. */
+.nav .logo__mark,
+.nav__icon img {
+  transition: filter var(--nav-ease);
+}
+
+.nav.is-dark .logo__mark,
+.nav.is-dark .nav__icon img {
+  filter: invert(1);
+}
+
+.nav__links a:nth-child(1) { left: calc(476 * var(--u)); }
+.nav__links a:nth-child(2) { left: calc(614.9 * var(--u)); }
+.nav__links a:nth-child(3) { left: calc(766 * var(--u)); }
+.nav__links a:nth-child(4) { left: calc(916.1 * var(--u)); }
+
+.nav__icon {
+  position: absolute;
+  top: calc(42.49 * var(--u));
+  width: calc(17.023 * var(--u));
+  height: calc(17.023 * var(--u));
+  transform-origin: 0 0;
+  transition: transform var(--nav-ease);
+}
+
+/* Compact: 13 px (the same icons at 13 / 17.023) at top 11.01; the cart sits 4 px further right. */
+.nav.is-compact .nav__icon {
+  transform: translateY(calc(-31.48 * var(--u))) scale(0.7637);
+}
+
+.nav.is-compact .nav__icon--cart {
+  transform: translate(calc(4.03 * var(--u)), calc(-31.48 * var(--u))) scale(0.7637);
+}
+
+.nav__icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.nav__icon--user { left: calc(1295.04 * var(--u)); }
+.nav__icon--cart { left: calc(1362.97 * var(--u)); }
+
+.hero__content > * {
+  position: absolute;
+}
+
+.hero__label--left { left: calc(60 * var(--u)); top: calc(136 * var(--u)); }
+.hero__label--right { left: calc(1010 * var(--u)); top: calc(136 * var(--u)); }
+
+.hero__title {
+  left: calc(58 * var(--u));
+  top: calc(514 * var(--u));
+  width: calc(459 * var(--u));
+}
+
+.hero__lead {
+  left: calc(1010 * var(--u));
+  top: calc(532 * var(--u));
+  width: calc(302 * var(--u));
+}
+
+.hero__cta {
+  left: calc(1010 * var(--u));
+  top: calc(656 * var(--u));
+}
+
+/* Intro (preloader) start state, before JS takes over. */
+.is-intro .nav > *,
+.is-intro .hero__content > * {
+  visibility: hidden;
+}
+
+/* ================= About ================= */
+
+.about {
+  position: relative;
+  /* stage + time the cards need to travel through the viewport */
+  height: calc(200vh + 1105 * var(--u));
+}
+
+.about__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.about__scene {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  background: linear-gradient(to top, #e5e2bf 0%, #bfe1e5 98.944%);
+}
+
+.about__scene > * {
+  position: absolute;
+}
+
+/* The clip is 16:10 like the 1440×900 artboard; it covers the stage and stays centred. */
+.about__frames {
+  left: 50%;
+  top: 50%;
+  width: max(100vw, 160vh);
+  height: max(62.5vw, 100vh);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.about__frames.is-ready {
+  opacity: 1;
+}
+
+/* Blends the hero's bottom colour into the clip's top edge while About scrolls in. */
+.about__seam {
+  inset: 0 0 auto;
+  height: calc(220 * var(--u));
+  background: linear-gradient(to bottom, #cbe6ea, rgba(203, 230, 234, 0));
+  pointer-events: none;
+}
+
+/* Hands the clip over to Places: ends on the Places top colour (#ebe6c9) with the same grain on
+   it, so there is no line wherever the viewport crops the 16:10 clip. */
+.about__fade {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(260 * var(--u));
+  background: var(--grain), #ebe6c9;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 90%);
+  mask-image: linear-gradient(to bottom, transparent, #000 90%);
+  pointer-events: none;
+}
+
+.about__title {
+  left: calc(1010 * var(--u));
+  top: calc(308 * var(--u));
+  width: calc(333 * var(--u));
+}
+
+.about__lead {
+  left: calc(1010 * var(--u));
+  top: calc(498 * var(--u));
+  width: calc(374 * var(--u));
+}
+
+/* Glass feature cards (fixed layer, moved by scroll) */
+
+.features {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.features__column {
+  position: absolute;
+  left: calc(487 * var(--u));
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(35 * var(--u));
+  transform: translateY(100vh);
+  will-change: transform;
+}
+
+.feature-card {
+  position: relative;
+  width: calc(560.003 * var(--u));
+  height: calc(345.003 * var(--u));
+  /* circle-equivalent radius of the Figma squircle (n=4.9, r=190) */
+  border-radius: calc(78 * var(--u));
+}
+
+.feature-card > * {
+  position: absolute;
+}
+
+.feature-card__tint,
+.feature-card__sheen {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.feature-card__value,
+.feature-card__unit {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-dots);
+  font-weight: 641;
+  font-variation-settings: "ROND" 100;
+  line-height: 1;
+  color: var(--paper);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.feature-card__value {
+  left: calc(50 * var(--u));
+  top: calc(49 * var(--u));
+  height: calc(104 * var(--u));
+  font-size: calc(112.558 * var(--u));
+  letter-spacing: calc(-5.6279 * var(--u));
+}
+
+.feature-card__unit {
+  left: calc(449 * var(--u));
+  top: calc(49 * var(--u));
+  height: calc(44 * var(--u));
+  font-size: calc(49.244 * var(--u));
+  letter-spacing: calc(-2.4622 * var(--u));
+}
+
+.feature-card--narrow-unit .feature-card__unit {
+  left: calc(480 * var(--u));
+}
+
+.feature-card__text {
+  left: calc(56 * var(--u));
+  top: calc(206 * var(--u));
+  /* Monospaced copy is wider than the original Aeonik Pro 34px: sized so each card keeps two lines. */
+  width: calc(464 * var(--u));
+  font-size: calc(28 * var(--u));
+  line-height: calc(38 * var(--u));
+}
+
+/* ================= Pick a place ================= */
+
+.page {
+  position: relative;
+}
+
+.places,
+.flown,
+.formats,
+.finale {
+  position: relative;
+}
+
+.places > *,
+.flown > *,
+.formats > *,
+.finale > *,
+.places__intro > *,
+.flown__intro > *,
+.formats__intro > *,
+.breath > *,
+.footer > * {
+  position: absolute;
+}
+
+.places__intro,
+.flown__intro,
+.formats__intro,
+.breath,
+.footer {
+  inset: 0;
+}
+
+.places {
+  height: calc(1290 * var(--u));
+  /* starts on the last About frame's bottom colour so the hand-off has no seam */
+  background: var(--grain), linear-gradient(to bottom, #ebe6c9 0%, #fff 55.563%, #dcecfa 100%);
+}
+
+.places__label { left: calc(63 * var(--u)); top: calc(103 * var(--u)); }
+
+.places__title {
+  left: calc(60 * var(--u));
+  top: calc(163 * var(--u));
+  width: calc(546 * var(--u));
+}
+
+.places__lead {
+  left: calc(1010 * var(--u));
+  top: calc(171 * var(--u));
+  width: calc(374 * var(--u));
+}
+
+.places__grid {
+  inset: 0;
+}
+
+.place {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(326 * var(--u));
+  text-align: center;
+}
+
+.place:nth-child(1) { left: calc(95 * var(--u)); }
+.place:nth-child(2) { left: calc(557.5 * var(--u)); }
+.place:nth-child(3) { left: calc(1014 * var(--u)); }
+
+.place > * {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.place > .place__orb {
+  /* no centring transform here: GSAP owns this element's transform for parallax */
+  left: calc(90 * var(--u));
+  transform: none;
+  top: calc(414 * var(--u));
+  width: calc(146 * var(--u));
+  height: calc(139 * var(--u));
+}
+
+/* Static picture: the fallback when the live orb can't start (no WebGL2). */
+.place__orb > img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* Live orb (src/orb): the gas takes ~69% of its canvas, the rest is room to wobble and grow.
+   190 × 0.69 ≈ 131 — the blob size of the picture in the 146×139 slot, on the same centre. */
+.place__orb > canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(190 * var(--u));
+  height: calc(190 * var(--u));
+  translate: -50% -50%;
+  cursor: grab;
+}
+
+.place__orb > canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.place__name {
+  top: calc(615 * var(--u));
+  white-space: nowrap;
+}
+
+.place__desc {
+  top: calc(697 * var(--u));
+  width: calc(326 * var(--u));
+  font-size: calc(18 * var(--u));
+  line-height: calc(29 * var(--u));
+}
+
+.place__desc--narrow {
+  width: calc(301 * var(--u));
+}
+
+.place__stats {
+  top: calc(867 * var(--u));
+  width: calc(186 * var(--u));
+  font-family: var(--font-text);
+  font-size: calc(14 * var(--u));
+  line-height: calc(40 * var(--u));
+  text-transform: uppercase;
+}
+
+.place__cta {
+  top: calc(1063 * var(--u));
+}
+
+.place__cta:hover {
+  transform: translateX(-50%) scale(1.035);
+}
+
+.place__cta:active {
+  transform: translateX(-50%) scale(0.98);
+}
+
+/* ================= Flown, not shipped ================= */
+
+.flown {
+  height: calc(1046 * var(--u));
+  overflow: hidden;
+  background: var(--grain), linear-gradient(to bottom, #dcecfa 0%, #d3e9f6 95%);
+}
+
+.flown__map {
+  left: calc(339 * var(--u));
+  top: calc(79 * var(--u));
+  width: calc(688 * var(--u));
+  height: calc(661.7 * var(--u));
+  mix-blend-mode: lighten;
+}
+
+/* Two layers for two scroll motions (src/sections/details.ts): the box rises and grows into
+   place, the picture inside keeps growing as it flies off. */
+.flown__drone {
+  left: calc(305 * var(--u));
+  top: calc(205 * var(--u));
+  width: calc(790 * var(--u));
+  height: calc(404 * var(--u));
+}
+
+.flown__drone > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flown__label { left: calc(64 * var(--u)); top: calc(225 * var(--u)); }
+
+.flown__title {
+  left: calc(60 * var(--u));
+  top: calc(285 * var(--u));
+  width: calc(284 * var(--u));
+}
+
+.flown__lead {
+  left: calc(1105 * var(--u));
+  top: calc(285 * var(--u));
+  width: calc(255 * var(--u));
+}
+
+.flown__stats {
+  inset: 0;
+}
+
+.stat {
+  position: absolute;
+  top: calc(797 * var(--u));
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.stat--range { left: calc(290.7 * var(--u)); }
+.stat--payload { left: calc(720.4 * var(--u)); }
+.stat--co2 { left: calc(1116 * var(--u)); }
+
+.stat__value {
+  height: calc(64.164 * var(--u));
+  font-family: var(--font-dots);
+  font-weight: 641;
+  font-variation-settings: "ROND" 100;
+  font-size: calc(45 * var(--u));
+  line-height: calc(64.164 * var(--u));
+  letter-spacing: calc(-2.25 * var(--u));
+  text-transform: uppercase;
+}
+
+.stat__label {
+  font-size: calc(24 * var(--u));
+  line-height: calc(34 * var(--u));
+}
+
+.stat--co2 .stat__label {
+  margin-top: calc(3 * var(--u));
+}
+
+.flown__divider {
+  position: absolute;
+  top: calc(807 * var(--u));
+  width: 1px;
+  height: calc(80 * var(--u));
+}
+
+.flown__divider--a { left: calc(507 * var(--u)); }
+.flown__divider--b { left: calc(953.1 * var(--u)); }
+
+/* ================= Formats + finale share one background ================= */
+
+.tail {
+  position: relative;
+  background: linear-gradient(to bottom, #d3e9f6 0%, #dddbcb 33.932%, #24241d 98.706%);
+}
+
+.formats {
+  height: calc(1322 * var(--u));
+  background: var(--grain);
+}
+
+.formats__label { left: calc(628 * var(--u)); top: calc(82 * var(--u)); }
+
+.formats__title {
+  left: 50%;
+  top: calc(138 * var(--u));
+  width: calc(799 * var(--u));
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.formats__cards {
+  inset: 0;
+}
+
+.format {
+  --cx: 208;
+  --price: 112.5;
+  --toggle: 324;
+  position: absolute;
+  top: calc(372 * var(--u));
+  width: calc(433 * var(--u));
+  height: calc(500 * var(--u));
+}
+
+.format--mask { left: calc(60 * var(--u)); }
+.format--vessel { left: calc(503 * var(--u)); width: calc(434 * var(--u)); --cx: 212.4; --price: 125.9; --toggle: 327; }
+.format--atrium { left: calc(947.3 * var(--u)); --cx: 214.7; --price: 128.7; --toggle: 350.7; }
+
+.format > * {
+  position: absolute;
+}
+
+.format__bg {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Hover only: the warm light from the Figma hover state (frame 59:324), already cut to the card. */
+.format__glow {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+  pointer-events: none;
+}
+
+.format:hover .format__glow {
+  opacity: 1;
+}
+
+.format__image--mask {
+  left: calc(147 * var(--u));
+  top: calc(-58 * var(--u));
+  width: calc(121 * var(--u));
+  height: calc(121 * var(--u));
+  object-fit: cover;
+}
+
+.format__image--vessel {
+  left: calc(147.3 * var(--u));
+  top: calc(-84.33 * var(--u));
+  width: calc(147.903 * var(--u));
+  height: calc(172.473 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.format__vessel-crop {
+  position: relative;
+  flex: none;
+  width: calc(94.764 * var(--u));
+  height: calc(146.027 * var(--u));
+  overflow: hidden;
+  transform: rotate(-25.19deg);
+}
+
+.format__vessel-crop img {
+  position: absolute;
+  left: -49.48%;
+  top: -14.21%;
+  width: 198.51%;
+  height: 128.82%;
+}
+
+.format__image--atrium {
+  left: calc(162.7 * var(--u));
+  top: calc(-86 * var(--u));
+  width: calc(105 * var(--u));
+  height: calc(176 * var(--u));
+  object-fit: fill;
+}
+
+.format__label,
+.format__name,
+.format__desc {
+  left: calc(var(--cx) * var(--u));
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.format__label { top: calc(138 * var(--u)); }
+
+.format__name {
+  top: calc(175 * var(--u));
+  white-space: nowrap;
+}
+
+.format__desc {
+  top: calc(266 * var(--u));
+  width: calc(300 * var(--u));
+  font-family: var(--font-text);
+  font-size: calc(14 * var(--u));
+  line-height: calc(28 * var(--u));
+  text-transform: uppercase;
+}
+
+.format__price {
+  left: calc(var(--price) * var(--u));
+  top: calc(400 * var(--u));
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.format__toggle {
+  left: calc(var(--toggle) * var(--u));
+  top: calc(406 * var(--u));
+  width: calc(42.207 * var(--u));
+  height: calc(42.207 * var(--u));
+  transition: transform 0.5s var(--ease-out);
+}
+
+.format__toggle:hover {
+  transform: scale(1.08);
+}
+
+.format__toggle > * {
+  position: absolute;
+  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
+}
+
+.format__toggle-on,
+.format__toggle-off {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.format__toggle-check {
+  left: calc(10 * var(--u));
+  top: calc(9 * var(--u));
+  width: calc(24 * var(--u));
+  height: calc(24 * var(--u));
+}
+
+.format__toggle-plus {
+  left: calc(11.9 * var(--u));
+  top: calc(11.15 * var(--u));
+  font-size: calc(35.836 * var(--u));
+  line-height: calc(15.533 * var(--u));
+  color: var(--paper);
+}
+
+.format:not(.is-selected) .format__toggle-on,
+.format:not(.is-selected) .format__toggle-check {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.format.is-selected .format__toggle-off,
+.format.is-selected .format__toggle-plus {
+  opacity: 0;
+  transform: scale(0.6) rotate(90deg);
+}
+
+/* Configurator */
+
+.config {
+  inset: 0;
+  pointer-events: none;
+}
+
+.config > * {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.config__caption {
+  font-family: var(--font-text);
+  font-size: calc(20 * var(--u));
+  line-height: calc(55 * var(--u));
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.config__caption--volume { left: calc(204.5 * var(--u)); top: calc(946 * var(--u)); }
+.config__caption--blend { left: calc(671.5 * var(--u)); top: calc(942 * var(--u)); }
+.config__caption--total { left: calc(721.5 * var(--u)); top: calc(1174 * var(--u)); }
+
+.segmented {
+  top: calc(1010 * var(--u));
+  height: calc(80 * var(--u));
+}
+
+.segmented--volume { left: calc(155 * var(--u)); width: calc(433 * var(--u)); }
+.segmented--blend { left: calc(630 * var(--u)); width: calc(655 * var(--u)); }
+
+.segmented > * {
+  position: absolute;
+}
+
+.segmented__track {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The selected-option pill: frosted white 30%, as the Figma squircle. Built in CSS rather than
+   the exported SVG because its width changes per option (data-thumb in the markup, from the
+   design's states) and a stretched SVG would bend its ends. */
+.segmented__thumb {
+  top: 0;
+  left: 0;
+  height: calc(80 * var(--u));
+  overflow: hidden;
+  border-radius: calc(40 * var(--u));
+  corner-shape: superellipse(1.585); /* Figma squircle n=3, where supported */
+  background: rgb(255 255 255 / 0.3);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  will-change: transform, width;
+}
+
+/* Hover only: a blurred warm circle at the top edge of the pill (Figma: r 56.5, blur 21.6). */
+.segmented__glow {
+  position: absolute;
+  left: 50%;
+  top: calc(-64 * var(--u));
+  width: calc(113 * var(--u));
+  height: calc(113 * var(--u));
+  margin-left: calc(-56.5 * var(--u));
+  border-radius: 50%;
+  background: #fceccd;
+  filter: blur(calc(21.65 * var(--u)));
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.segmented:hover .segmented__glow {
+  opacity: 1;
+}
+
+.segmented__option {
+  top: calc(31 * var(--u));
+  font-family: var(--font-text);
+  font-size: calc(18 * var(--u));
+  line-height: calc(19.505 * var(--u));
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.segmented__option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented--volume .segmented__option { transform: translateX(-50%); }
+.segmented--volume .segmented__option:nth-of-type(1) { left: calc(88 * var(--u)); }
+.segmented--volume .segmented__option:nth-of-type(2) { left: calc(212.25 * var(--u)); }
+.segmented--volume .segmented__option:nth-of-type(3) { left: calc(336.5 * var(--u)); }
+
+.segmented--blend .segmented__option:nth-of-type(1) { left: calc(56 * var(--u)); }
+.segmented--blend .segmented__option:nth-of-type(2) { left: calc(285 * var(--u)); }
+.segmented--blend .segmented__option:nth-of-type(3) { left: calc(491 * var(--u)); }
+
+.config__total {
+  left: calc(940.5 * var(--u));
+  top: calc(1192 * var(--u));
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: calc(75 * var(--u));
+  line-height: calc(55 * var(--u));
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.config__submit {
+  left: calc(1075 * var(--u));
+  top: calc(1180 * var(--u));
+}
+
+/* ================= 48 hours + footer ================= */
+
+.finale {
+  height: calc(1433 * var(--u));
+  overflow: hidden;
+}
+
+.finale__kv {
+  left: calc(29 * var(--u));
+  top: calc(-6 * var(--u));
+  width: calc(514 * var(--u));
+  height: calc(964 * var(--u));
+  object-fit: cover;
+}
+
+.finale__word {
+  /* placed by matching the export against the full-page design */
+  left: calc(-92 * var(--u));
+  top: calc(1140 * var(--u));
+  width: calc(1614 * var(--u));
+  height: calc(395 * var(--u));
+}
+
+/* Grain sits above the shade here, as in Figma, so the dark footer gets the same lift. */
+.finale__grain {
+  inset: 0;
+  background: var(--grain);
+  pointer-events: none;
+}
+
+.finale__shade {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(1430 * var(--u));
+  background: linear-gradient(to bottom, rgba(135, 144, 135, 0) 4.874%, #141925 100.56%);
+}
+
+.breath__title {
+  left: calc(629 * var(--u));
+  top: calc(179 * var(--u));
+  width: calc(732 * var(--u));
+}
+
+.breath__lead {
+  left: calc(629 * var(--u));
+  top: calc(336 * var(--u));
+  width: calc(402 * var(--u));
+}
+
+.subscribe {
+  inset: 0;
+  pointer-events: none;
+}
+
+.subscribe > * {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.subscribe__input {
+  left: calc(629 * var(--u));
+  top: calc(517 * var(--u));
+  width: calc(370 * var(--u));
+  height: calc(55 * var(--u));
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: var(--font-text);
+  font-size: calc(20 * var(--u));
+  line-height: calc(55 * var(--u));
+}
+
+.subscribe__input::placeholder {
+  color: var(--ink);
+  opacity: 1;
+}
+
+.subscribe__line {
+  left: calc(629 * var(--u));
+  top: calc(583.5 * var(--u));
+  width: calc(370 * var(--u));
+  height: 1px;
+}
+
+.subscribe__submit {
+  left: calc(1075 * var(--u));
+  top: calc(504 * var(--u));
+}
+
+.footer__logo {
+  left: calc(60 * var(--u));
+  top: calc(896.7 * var(--u));
+}
+
+/* 18/29 on a 99 px step */
+.footer__links,
+.footer__social {
+  display: flex;
+  flex-direction: column;
+  gap: calc(70 * var(--u));
+  top: calc(898.7 * var(--u));
+  color: var(--paper);
+  font-size: calc(18 * var(--u));
+  line-height: calc(29 * var(--u));
+}
+
+.footer__links { left: calc(629 * var(--u)); }
+.footer__social { left: calc(915 * var(--u)); }
+
+.footer__links a,
+.footer__social a {
+  width: fit-content;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.footer__links a:hover,
+.footer__social a:hover {
+  opacity: 0.6;
+}
+
+.footer__legal {
+  inset: 0;
+  pointer-events: none;
+}
+
+.footer__legal > * {
+  position: absolute;
+  top: calc(1382.7 * var(--u));
+  color: var(--legal);
+  font-size: calc(16 * var(--u));
+  line-height: calc(19.505 * var(--u));
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.footer__privacy { left: calc(57 * var(--u)); }
+.footer__terms { left: calc(190 * var(--u)); }
+.footer__cookies { left: calc(390 * var(--u)); }
+.footer__copy { left: calc(1330 * var(--u)); }

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gas orbs</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        display: grid;
+        place-items: center;
+        background: #f6f6ea;
+        font: 300 13px/1.4 "IBM Plex Mono", ui-monospace, monospace;
+        color: #3a3a34;
+        transition: background 0.4s;
+      }
+      body[data-bg="dark"] {
+        background: #1e1e1e;
+        color: #bdbdb5;
+      }
+      body[data-bg="places"] {
+        background: linear-gradient(to bottom, #ebe6c9 0%, #fff 55.563%, #dcecfa 100%);
+      }
+      .orbs {
+        display: flex;
+        gap: 0;
+        width: min(100vw, 1500px);
+      }
+      .orbs figure {
+        flex: 1;
+        margin: 0;
+        text-align: center;
+      }
+      .orbs canvas {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1;
+        cursor: grab;
+        touch-action: none;
+      }
+      .is-solo .orbs {
+        width: min(100vw, 100vh);
+      }
+      .is-solo figcaption {
+        display: none;
+      }
+      .orbs canvas.is-dragging {
+        cursor: grabbing;
+      }
+      .bg {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        display: flex;
+        gap: 6px;
+      }
+      .bg button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 1px solid currentColor;
+        border-radius: 99px;
+        padding: 4px 12px;
+        opacity: 0.6;
+        cursor: pointer;
+      }
+      .bg button[aria-pressed="true"] {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body data-bg="cream">
+    <div class="bg" role="group" aria-label="Background">
+      <button type="button" data-bg="cream" aria-pressed="true">cream</button>
+      <button type="button" data-bg="places" aria-pressed="false">places</button>
+      <button type="button" data-bg="dark" aria-pressed="false">dark</button>
+    </div>
+    <div class="orbs">
+      <figure><canvas data-orb="forest" aria-label="Forest meadows"></canvas><figcaption>Forest meadows</figcaption></figure>
+      <figure><canvas data-orb="sea" aria-label="Sea breeze"></canvas><figcaption>Sea breeze</figcaption></figure>
+      <figure><canvas data-orb="antarctic" aria-label="Antarctic Ice"></canvas><figcaption>Antarctic Ice</figcaption></figure>
+    </div>
+    <script type="module" src="/src/orb/demo.ts"></script>
+  </body>
+</html>

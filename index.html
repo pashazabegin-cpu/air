@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AIRSCAPE — AERON 2/0</title>
+    <meta name="description" content="Sourced air, blended to your spec, flown to your door across Europe." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Doto:ROND,wght@0..100,100..900&display=swap" rel="stylesheet" />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body class="is-intro">
+    <!-- Fixed: full header at the top, compact frosted glass once the page scrolls. -->
+    <header class="nav">
+      <a class="logo nav__logo" href="#" aria-label="Airscape home">
+        <img class="logo__mark" src="/img/logo-mark.svg" width="35.699" height="35.699" alt="" />
+        <span class="logo__word">Airscape</span>
+      </a>
+      <nav class="nav__links" aria-label="Main">
+        <a href="#about">About</a>
+        <a href="#product">Product</a>
+        <a href="#delivery">Delivery</a>
+        <a href="#format">Format</a>
+      </nav>
+      <a class="nav__icon nav__icon--user" href="#" aria-label="Account"><img src="/img/icon-user.svg" width="24" height="24" alt="" /></a>
+      <a class="nav__icon nav__icon--cart" href="#" aria-label="Cart"><img src="/img/icon-cart.svg" width="24" height="24" alt="" /></a>
+    </header>
+
+    <!-- Hero pins while scrolling turns her to the camera, then scrolls away into About. -->
+    <section class="hero" aria-label="AERON 2/0">
+      <div class="hero__stage">
+        <div class="hero__bg"></div>
+        <div class="hero__media">
+          <video class="hero__video" src="/video/hero.mp4" muted playsinline preload="auto" disablepictureinpicture></video>
+          <canvas class="hero__frames" aria-hidden="true"></canvas>
+        </div>
+        <div class="hero__fade"></div>
+
+        <div class="hero__content">
+          <p class="label hero__label hero__label--left" data-reveal="text">New model     •     aeron 2/0 </p>
+          <p class="label hero__label hero__label--right" data-reveal="text">your   New                       air</p>
+          <h1 class="h50 hero__title" data-reveal="heading">Breathe<br />the cleanest<br />places</h1>
+          <p class="lead hero__lead" data-reveal="text">Sourced air, blended to your spec, flown to your door across Europe.</p>
+          <a class="btn btn--preorder btn--metal hero__cta" href="#format">Pre-order now</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about__stage">
+        <!-- liquidGL snapshots this scene and refracts it through the feature cards. -->
+        <div class="about__scene" data-reveal-group>
+          <!-- about-scroll.mp4 as a frame sequence: background, AERON 2/0 and the rotating mask -->
+          <canvas class="about__frames" role="img" aria-label="AERON 2/0 half-mask rotating"></canvas>
+          <div class="about__seam"></div>
+          <div class="about__fade"></div>
+          <h2 class="h50 about__title" data-reveal="heading">Built for air<br />you can trust.</h2>
+          <p class="lead about__lead" data-reveal="text">The specs that matter, from cartridge capacity to filtration threshold.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fixed layer: liquidGL requires its lenses outside other stacking contexts so the card text sits above the glass. -->
+    <div class="features" aria-label="AERON 2/0 specs">
+      <div class="features__column">
+        <article class="feature-card">
+          <img class="feature-card__tint" src="/img/card-glass.svg" alt="" />
+          <img class="feature-card__sheen" src="/img/card-sheen.svg" alt="" />
+          <p class="feature-card__value">12</p>
+          <p class="feature-card__unit">l</p>
+          <p class="feature-card__text">Air per cartridge —<br />40 minutes of breathing</p>
+        </article>
+        <article class="feature-card">
+          <img class="feature-card__tint" src="/img/card-glass.svg" alt="" />
+          <img class="feature-card__sheen" src="/img/card-sheen.svg" alt="" />
+          <p class="feature-card__value">212</p>
+          <p class="feature-card__unit">gr</p>
+          <p class="feature-card__text">Aerospace aluminium, medical-grade silicone seal</p>
+        </article>
+        <article class="feature-card feature-card--narrow-unit">
+          <img class="feature-card__tint" src="/img/card-glass.svg" alt="" />
+          <img class="feature-card__sheen" src="/img/card-sheen.svg" alt="" />
+          <p class="feature-card__value">3</p>
+          <p class="feature-card__unit">s</p>
+          <p class="feature-card__text">Cartridge swap, magnetic quarter-turn lock</p>
+        </article>
+      </div>
+    </div>
+
+    <main class="page">
+      <section class="places" id="product">
+        <div class="places__intro" data-reveal-group>
+          <p class="label places__label" data-reveal="text">Three   atmospheres</p>
+          <h2 class="h50 places__title" data-reveal="heading">Pick a place,<br />not a product</h2>
+          <p class="lead places__lead" data-reveal="text">Captured on site, filtered nine times, verified by gas chromatograph before sealing.</p>
+        </div>
+        <div class="places__grid">
+          <article class="place" data-reveal-group>
+            <div class="place__orb" data-orb="forest" data-parallax="-40"><img src="/img/blend-forest.webp" width="146" height="139" alt="" /></div>
+            <h3 class="h35 place__name" data-reveal="text">Forest meadows</h3>
+            <p class="place__desc" data-reveal="text">Carpathians, 820 m.<br />Pine terpenes at 4.2 ppb, pollen filtered out.</p>
+            <p class="place__stats" data-reveal="text">21.4% — O₂<br />64% — Humidity<br />820m — Altitude</p>
+            <button class="btn btn--cart btn--metal-hover place__cta" type="button">Add to cart</button>
+          </article>
+          <article class="place" data-reveal-group>
+            <div class="place__orb" data-orb="sea" data-parallax="-60"><img src="/img/blend-sea.webp" width="146" height="139" alt="" /></div>
+            <h3 class="h35 place__name" data-reveal="text">Sea breeze</h3>
+            <p class="place__desc place__desc--narrow" data-reveal="text">Atlantic shelf, 3 km offshore. Iodine at 0.8 ppb, salt aerosol retained.</p>
+            <p class="place__stats" data-reveal="text">20.9% — O₂<br />78% — Humidity<br />3.1g — Salt / m³</p>
+            <button class="btn btn--cart btn--metal-hover place__cta" type="button">Add to cart</button>
+          </article>
+          <article class="place" data-reveal-group>
+            <div class="place__orb" data-orb="antarctic" data-parallax="-40"><img src="/img/blend-antarctic.webp" width="146" height="139" alt="" /></div>
+            <h3 class="h35 place__name" data-reveal="text">Antarctic Ice</h3>
+            <p class="place__desc" data-reveal="text">Queen Maud Land. 0.02 µg particulate per m³ — the lowest on record.</p>
+            <p class="place__stats" data-reveal="text">20.6% — O₂<br />12% — Humidity<br />−54° — At capture</p>
+            <button class="btn btn--cart btn--metal-hover place__cta" type="button">Add to cart</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="flown" id="delivery">
+        <img class="flown__map" src="/img/world-map.svg" width="688" height="661" alt="" data-parallax="60" />
+        <div class="flown__drone"><img src="/img/drone.webp" width="790" height="404" alt="ASC-04 cargo drone" /></div>
+        <div class="flown__intro" data-reveal-group>
+          <p class="label flown__label" data-reveal="text">Autonomous   freight</p>
+          <h2 class="h50 flown__title" data-reveal="heading">Flown,<br />not shipped.</h2>
+          <p class="lead flown__lead" data-reveal="text">ASC-04 cargo drones<br />fly the canister from the capture site to your address. Twelve countries, one flight, zero handling.</p>
+        </div>
+        <div class="flown__stats" data-reveal-group>
+          <div class="stat stat--range">
+            <p class="stat__value"><span data-count="600">600</span> km</p>
+            <p class="stat__label" data-reveal="text">Range per charge</p>
+          </div>
+          <img class="flown__divider flown__divider--a" src="/img/stat-divider.svg" width="1" height="80" alt="" />
+          <div class="stat stat--payload">
+            <p class="stat__value"><span data-count="12">12</span> kg</p>
+            <p class="stat__label" data-reveal="text">Payload</p>
+          </div>
+          <img class="flown__divider flown__divider--b" src="/img/stat-divider.svg" width="1" height="80" alt="" />
+          <div class="stat stat--co2">
+            <p class="stat__value"><span data-count="0">0</span> g</p>
+            <p class="stat__label" data-reveal="text">CO₂ in transit</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="tail">
+        <section class="formats" id="format">
+          <div class="formats__intro" data-reveal-group>
+            <p class="label formats__label" data-reveal="text">Choose   a   format</p>
+            <h2 class="h50 formats__title" data-reveal="heading">As much air as you need.</h2>
+          </div>
+
+          <div class="formats__cards">
+            <article class="format format--mask is-selected" data-reveal-group>
+              <img class="format__bg" src="/img/card-format-1.svg" width="433" height="500" alt="" />
+              <img class="format__glow" src="/img/format-glow.svg" width="433" height="500" alt="" />
+              <img class="format__image format__image--mask" src="/img/product-mask-small.webp" width="121" height="121" alt="" data-parallax="-50" />
+              <p class="label format__label" data-reveal="text">PERSONAL  musk</p>
+              <h3 class="h35 format__name" data-reveal="text">AERON 2/0</h3>
+              <p class="format__desc" data-reveal="text">212 g half-mask, 12 L cartridge, 40 minutes per swap.</p>
+              <p class="h45 format__price" data-reveal="heading">€149</p>
+              <button class="format__toggle" type="button" aria-pressed="true" aria-label="Remove AERON 2/0">
+                <img class="format__toggle-on" src="/img/format-selected.svg" width="42.207" height="42.207" alt="" />
+                <img class="format__toggle-check" src="/img/icon-check.svg" width="24" height="24" alt="" />
+                <img class="format__toggle-off" src="/img/format-add.svg" width="42.207" height="42.207" alt="" />
+                <span class="format__toggle-plus" aria-hidden="true">+</span>
+              </button>
+            </article>
+            <article class="format format--vessel" data-reveal-group>
+              <img class="format__bg" src="/img/card-format-2.svg" width="434" height="500" alt="" />
+              <img class="format__glow" src="/img/format-glow.svg" width="433" height="500" alt="" />
+              <div class="format__image format__image--vessel" data-parallax="-70">
+                <div class="format__vessel-crop"><img src="/img/product-vessel.webp" width="400" height="400" alt="" /></div>
+              </div>
+              <p class="label format__label" data-reveal="text">REFILLABLE   CANISTER</p>
+              <h3 class="h35 format__name" data-reveal="text">VESSEL</h3>
+              <p class="format__desc" data-reveal="text">Aluminium cylinder at 200 bar, refillable 400 times. Volume below.</p>
+              <p class="h45 format__price" data-reveal="heading">€260</p>
+              <button class="format__toggle" type="button" aria-pressed="false" aria-label="Add Vessel">
+                <img class="format__toggle-on" src="/img/format-selected.svg" width="42.207" height="42.207" alt="" />
+                <img class="format__toggle-check" src="/img/icon-check.svg" width="24" height="24" alt="" />
+                <img class="format__toggle-off" src="/img/format-add.svg" width="42.207" height="42.207" alt="" />
+                <span class="format__toggle-plus" aria-hidden="true">+</span>
+              </button>
+            </article>
+            <article class="format format--atrium" data-reveal-group>
+              <img class="format__bg" src="/img/card-format-3.svg" width="433" height="500" alt="" />
+              <img class="format__glow" src="/img/format-glow.svg" width="433" height="500" alt="" />
+              <img class="format__image format__image--atrium" src="/img/product-atrium.webp" width="105" height="176" alt="" data-parallax="-50" />
+              <p class="label format__label" data-reveal="text">WALL   UNIT</p>
+              <h3 class="h35 format__name" data-reveal="text">ATRIUM</h3>
+              <p class="format__desc" data-reveal="text">60 m³/h wall unit, monthly refills, blend set from the app.</p>
+              <p class="h45 format__price" data-reveal="heading">€2,400</p>
+              <button class="format__toggle" type="button" aria-pressed="false" aria-label="Add Atrium">
+                <img class="format__toggle-on" src="/img/format-selected.svg" width="42.207" height="42.207" alt="" />
+                <img class="format__toggle-check" src="/img/icon-check.svg" width="24" height="24" alt="" />
+                <img class="format__toggle-off" src="/img/format-add.svg" width="42.207" height="42.207" alt="" />
+                <span class="format__toggle-plus" aria-hidden="true">+</span>
+              </button>
+            </article>
+          </div>
+
+          <form class="config" data-reveal-group>
+            <p class="config__caption config__caption--volume" data-reveal="text">Volume:</p>
+            <div class="segmented segmented--volume" role="radiogroup" aria-label="Volume">
+              <img class="segmented__track" src="/img/volume-track.svg" width="433" height="80" alt="" />
+              <span class="segmented__thumb" aria-hidden="true"><span class="segmented__glow"></span></span>
+              <label class="segmented__option" data-thumb="0 162.5"><input type="radio" name="volume" value="12" />12 L</label>
+              <label class="segmented__option" data-thumb="131 162.5"><input type="radio" name="volume" value="40" checked />40 L</label>
+              <label class="segmented__option" data-thumb="270 162.5"><input type="radio" name="volume" value="80" />80 L</label>
+            </div>
+
+            <p class="config__caption config__caption--blend" data-reveal="text">Blend:</p>
+            <div class="segmented segmented--blend" role="radiogroup" aria-label="Blend">
+              <img class="segmented__track" src="/img/blend-track.svg" width="655" height="80" alt="" />
+              <span class="segmented__thumb" aria-hidden="true"><span class="segmented__glow"></span></span>
+              <label class="segmented__option" data-thumb="1 256"><input type="radio" name="blend" value="forest" />Forest Meadows</label>
+              <label class="segmented__option" data-thumb="231 212.5"><input type="radio" name="blend" value="sea" checked />Sea breeze</label>
+              <label class="segmented__option" data-thumb="442.5 212.5"><input type="radio" name="blend" value="antarctic" />Antarctic Ice</label>
+            </div>
+
+            <p class="config__caption config__caption--total" data-reveal="text">Total, delivered:</p>
+            <p class="config__total" aria-live="polite">€<span class="config__amount">300</span></p>
+            <button class="btn btn--order btn--metal config__submit" type="submit">Add to order</button>
+          </form>
+        </section>
+
+        <div class="finale">
+          <img class="finale__kv" src="/img/kv-woman.webp" width="546" height="1024" alt="" data-parallax="-120" />
+          <!-- Exported from Figma: the progressive blur on this layer cannot be reproduced with CSS. -->
+          <img class="finale__word" src="/img/aeron-footer.webp" width="1614" height="395" alt="" />
+          <div class="finale__shade"></div>
+          <div class="finale__grain"></div>
+
+          <section class="breath" data-reveal-group>
+            <h2 class="h50 breath__title" data-reveal="heading">48 hours from source<br />to your first breath.</h2>
+            <p class="lead breath__lead" data-reveal="text">Batch certificate with every shipment. Blend swap free for 30 days.</p>
+            <form class="subscribe" action="#">
+              <label class="visually-hidden" for="email">Email</label>
+              <input class="subscribe__input" id="email" type="email" placeholder="you@address.ru" autocomplete="email" />
+              <img class="subscribe__line" src="/img/email-line.svg" width="370" height="1" alt="" />
+              <button class="btn btn--reserve subscribe__submit" type="submit">Reserve air</button>
+            </form>
+          </section>
+
+          <footer class="footer">
+            <a class="logo logo--light footer__logo" href="#" aria-label="Airscape home">
+              <img class="logo__mark" src="/img/logo-mark-white.svg" width="35.699" height="35.699" alt="" />
+              <span class="logo__word">Airscape</span>
+            </a>
+            <nav class="footer__links" aria-label="Footer">
+              <a href="#about">About</a>
+              <a href="#product">Product</a>
+              <a href="#delivery">Delivery</a>
+              <a href="#format">Format</a>
+            </nav>
+            <nav class="footer__social" aria-label="Social">
+              <a href="#">Instagram</a>
+              <a href="#">Facebook</a>
+            </nav>
+            <div class="footer__legal">
+              <a class="footer__privacy" href="#">Privacy</a>
+              <a class="footer__terms" href="#">Terms of service</a>
+              <a class="footer__cookies" href="#">Cookie policy</a>
+              <p class="footer__copy">©2056</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
