@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import { openSequence } from "../lib/frame-sequence";
 import { initGlass, refractLive } from "../lib/glass";
+import { LITE } from "../lib/layout";
 import { addReveal } from "../lib/reveal";
 
 /**
@@ -26,8 +27,11 @@ export async function initAbout() {
     .catch((error) => console.error("About frames failed to load", error));
 
   // Glass snapshots the scene as it looks fully revealed — before any "hidden" states are applied.
-  await initGlass();
-  refractLive(canvas, frames);
+  // The light build keeps the cards as CSS frosted glass (.is-lite in responsive.css) instead.
+  if (!LITE) {
+    await initGlass();
+    refractLive(canvas, frames);
+  }
 
   // Entry: the copy reveals while About scrolls in; the colour bridge from the hero fades out.
   const entry = gsap.timeline({

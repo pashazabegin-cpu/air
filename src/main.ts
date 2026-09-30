@@ -8,6 +8,8 @@ import { SplitText } from "gsap/SplitText";
 import { initCursor } from "./lib/cursor";
 import { initEdgeBlur } from "./lib/edge-blur";
 import { initHeader } from "./lib/header";
+import { LITE } from "./lib/layout";
+import { initMenu } from "./lib/menu";
 import { initMetalButtons } from "./lib/metal-button";
 import { initParallax } from "./lib/parallax";
 import { createPreloader } from "./lib/preloader";
@@ -25,12 +27,14 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 async function boot() {
   history.scrollRestoration = "manual";
   window.scrollTo(0, 0);
+  document.documentElement.classList.toggle("is-lite", LITE);
 
   initCursor();
   const preloader = createPreloader();
   const lenis = createSmoothScroll();
   lenis.stop(); // locked until the hero intro finishes
   initHeader();
+  initMenu(lenis);
   initTextRoll();
   if (import.meta.env.DEV) Object.assign(window, { lenis, ScrollTrigger });
 
@@ -49,7 +53,7 @@ async function boot() {
   initParallax();
   initDetails();
   initFormats();
-  initEdgeBlur();
+  if (!LITE) initEdgeBlur();
   ScrollTrigger.refresh();
 
   await preloader.complete;

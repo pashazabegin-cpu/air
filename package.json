@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "frames": "node scripts/build-frames.mjs",
+    "frames": "node scripts/build-frames.mjs && node scripts/build-lite-frames.mjs",
     "images": "node scripts/optimize-images.mjs",
     "grain": "node scripts/make-grain.mjs"
   },

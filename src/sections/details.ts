@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import { unit } from "../lib/smooth-scroll";
+import { unit } from "../lib/layout";
 
 /** Scroll choreography for the sections after About. */
 export function initDetails() {
@@ -16,10 +16,12 @@ export function initDetails() {
  * scrubbed tweens on one `scale` overwrite each other when a fast scroll crosses the midpoint.
  */
 function flyDrone() {
-  // Drone centre and bottom within the section, in design px (.flown__drone: top 205, height 404).
-  const rising = () => `top+=${407 * unit()} bottom`;
-  const centred = () => `top+=${407 * unit()} center`;
-  const gone = () => `top+=${609 * unit()} top`;
+  // Drone centre and bottom within the section, from its layout box, so both layouts work
+  // (offsets ignore the transforms animated below).
+  const drone = document.querySelector<HTMLElement>(".flown__drone")!;
+  const rising = () => `top+=${drone.offsetTop + drone.offsetHeight / 2} bottom`;
+  const centred = () => `top+=${drone.offsetTop + drone.offsetHeight / 2} center`;
+  const gone = () => `top+=${drone.offsetTop + drone.offsetHeight} top`;
   gsap.fromTo(
     ".flown__drone",
     { yPercent: 65, scale: 0.8 },

@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import { unit } from "./smooth-scroll";
+import { unit } from "./layout";
 
 /**
  * Custom cursor (Figma 70:796): a 6 px dot with a disc of glass behind it that trails a little.

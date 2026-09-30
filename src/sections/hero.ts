@@ -2,9 +2,12 @@ import type Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { type FrameSequence, openSequence } from "../lib/frame-sequence";
+import { LITE } from "../lib/layout";
 import { addReveal } from "../lib/reveal";
 
 const INTRO_TIMEOUT_MS = 12000;
+/** Light build: seconds of video the preloader waits for; the rest streams in as it plays. */
+const LITE_BUFFER_S = 2;
 
 /**
  * Hero = scroll video with an intro.
@@ -30,8 +33,20 @@ export function loadHero() {
     return { manifest, sequence };
   });
 
+  // iOS Safari downloads a video only once it plays, whatever `preload` says. On touch devices it
+  // starts muted under the preloader and holds on its first frame (unless the intro has already
+  // begun); where it may not play at all (Low Power Mode) the preloader stops waiting for it.
+  let blocked = false;
+  if (LITE) {
+    video.play().then(
+      () => document.body.classList.contains("is-intro") && video.pause(),
+      () => (blocked = true),
+    );
+  }
+  const needed = () => (LITE ? Math.min(stopAt, LITE_BUFFER_S) : stopAt);
+
   /** Share of the intro on hand, 0…1: frames decoded and video buffered up to `from`. */
-  const progress = () => (framesIn / framesTotal + buffered(video, stopAt)) / 2;
+  const progress = () => (framesIn / framesTotal + (blocked ? 1 : buffered(video, needed()))) / 2;
   return { ready, progress };
 }
 
@@ -47,7 +62,11 @@ export async function playHero(lenis: Lenis, { ready }: HeroLoad) {
 
   const intro = buildIntro(content);
   document.body.classList.remove("is-intro");
-  const videoStopped = playUntil(video, manifest.from).catch(() => undefined);
+  // Without autoplay (iOS Low Power Mode) the still she turns from stands in for the video.
+  const videoStopped = playUntil(video, manifest.from).catch(() => {
+    frames.render(0);
+    gsap.to(canvas, { opacity: 1, duration: 0.8, ease: "power2.out" });
+  });
   intro.play();
 
   await Promise.race([

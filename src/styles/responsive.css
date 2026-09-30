@@ -1,0 +1,1223 @@
+/* =====================================================================================
+   Adaptive layouts. sections.css is the 1440 desktop artboard, used from 1200 px up; below it
+   the page reflows into columns: tablet 600–1199, phone under 600. Keep the breakpoints in sync
+   with src/lib/layout.ts.
+
+   Below 1200 `--u` (one design pixel) turns into `--m`, a compact scale close to 1 CSS px. So the
+   pieces drawn in Figma (logo, buttons, cards, toggles, the orbs) keep their drawing at natural
+   size, or at a local `--u` where they must fit a column, and only the page layout is redone
+   here. Hero and About, pinned full-screen scenes, also follow the screen's orientation:
+   portrait stacks the copy over the picture, landscape keeps the desktop composition.
+   ===================================================================================== */
+
+:root {
+  --svh: 1vh;
+}
+
+/* iOS: no font inflation in landscape, no grey flash on tap. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+a,
+button,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The small viewport (browser toolbars shown): copy placed by it never hides under a toolbar. */
+@supports (height: 1svh) {
+  :root {
+    --svh: 1svh;
+  }
+}
+
+.nav__burger,
+.formats__dots {
+  display: none;
+}
+
+/* Light build (touch devices, src/lib/layout.ts): the About cards are CSS frosted glass instead
+   of liquidGL, which would snapshot and refract the whole scene on the phone's GPU. */
+.is-lite .feature-card {
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.08);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+}
+
+.is-lite .edge-blur {
+  display: none;
+}
+
+/* ================================ Compact: tablet and phone ================================ */
+
+@media (max-width: 1199px) {
+  :root {
+    --m: clamp(1px, calc(100vw / 768), 1.2px);
+    --u: var(--m);
+    --gutter: calc(40 * var(--m));
+    --nav-h: calc(64 * var(--m));
+    --nav-h-compact: calc(48 * var(--m));
+    --h50-size: calc(48 * var(--m));
+    --h50-line: calc(54 * var(--m));
+    /* One design px of the About glass cards (560 × 345): as wide as the column allows, never
+       taller than about half the screen. */
+    --cu: min(calc((100vw - 2 * var(--gutter)) / 560), calc(55 * var(--svh) / 345), 0.8px);
+    /* Format cards in the carousel. */
+    --card-w: calc(340 * var(--m));
+  }
+
+  /* ---------- Type ---------- */
+
+  .h50 {
+    font-size: var(--h50-size);
+    line-height: var(--h50-line);
+  }
+
+  .lead {
+    font-size: calc(15 * var(--m));
+    line-height: calc(25 * var(--m));
+  }
+
+  .label {
+    font-size: calc(10 * var(--m));
+    line-height: calc(20 * var(--m));
+    letter-spacing: calc(4 * var(--m));
+  }
+
+  /* Format cards keep their Figma type, scaled with the card (local --u). */
+  .format .label {
+    font-size: calc(10 * var(--u));
+    line-height: calc(40 * var(--u));
+    letter-spacing: calc(4.7 * var(--u));
+  }
+
+  /* ---------- Header: logo, icons and a burger; the links become a panel ---------- */
+
+  .nav {
+    height: var(--nav-h);
+  }
+
+  .nav.is-compact {
+    height: var(--nav-h-compact);
+  }
+
+  .nav__logo,
+  .nav.is-compact .nav__logo {
+    left: var(--gutter);
+    top: 50%;
+    transform-origin: 0 50%;
+  }
+
+  .nav__logo {
+    transform: translateY(-50%) scale(0.78);
+  }
+
+  .nav.is-compact .nav__logo {
+    transform: translateY(-50%) scale(0.62);
+  }
+
+  /* 40 px touch targets around 18 px icons. */
+  .nav__icon,
+  .nav.is-compact .nav__icon,
+  .nav.is-compact .nav__icon--cart {
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: calc(40 * var(--m));
+    height: calc(40 * var(--m));
+    transform: translateY(-50%);
+    transform-origin: 50% 50%;
+  }
+
+  .nav.is-compact .nav__icon,
+  .nav.is-compact .nav__icon--cart {
+    transform: translateY(-50%) scale(0.9);
+  }
+
+  .nav__icon img {
+    width: calc(18 * var(--m));
+    height: calc(18 * var(--m));
+  }
+
+  .nav__icon--user {
+    left: auto;
+    right: calc(var(--gutter) + 76 * var(--m));
+  }
+
+  .nav__icon--cart {
+    left: auto;
+    right: calc(var(--gutter) + 36 * var(--m));
+  }
+
+  .nav__burger {
+    position: absolute;
+    top: 50%;
+    right: calc(var(--gutter) - 11 * var(--m));
+    display: block;
+    width: calc(44 * var(--m));
+    height: calc(44 * var(--m));
+    transform: translateY(-50%);
+  }
+
+  .nav__burger span {
+    position: absolute;
+    left: calc(11 * var(--m));
+    width: calc(22 * var(--m));
+    height: 1.5px;
+    background: var(--ink);
+    transition:
+      top 0.45s var(--ease-out),
+      transform 0.45s var(--ease-out),
+      background-color var(--nav-ease);
+  }
+
+  .nav__burger span:first-child {
+    top: calc(18 * var(--m));
+  }
+
+  .nav__burger span:last-child {
+    top: calc(25 * var(--m));
+  }
+
+  .nav.is-open .nav__burger span {
+    top: calc(21.5 * var(--m) - 0.75px);
+  }
+
+  .nav.is-open .nav__burger span:first-child {
+    transform: rotate(45deg);
+  }
+
+  .nav.is-open .nav__burger span:last-child {
+    transform: rotate(-45deg);
+  }
+
+  .nav.is-dark:not(.is-open) .nav__burger span {
+    background: var(--paper);
+  }
+
+  /* Open: a solid bar over a panel in the page's own pale gradient. Nothing to frost through
+     here: the bar's backdrop-filter makes it the backdrop root of everything inside it. */
+  .nav.is-open,
+  .nav.is-open.is-compact,
+  .nav.is-open.is-compact.is-dark {
+    background-color: var(--paper);
+  }
+
+  .nav.is-open.is-dark .logo__mark,
+  .nav.is-open.is-dark .nav__icon img {
+    filter: none;
+  }
+
+  .nav__links {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: calc(24 * var(--m)) var(--gutter);
+    background: var(--grain), linear-gradient(to bottom, #fff 0%, #dcecfa 75%);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.35s var(--ease-out),
+      visibility 0s linear 0.35s;
+  }
+
+  .nav.is-open .nav__links {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.45s var(--ease-out);
+  }
+
+  .nav .nav__links a:nth-child(n) {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: fit-content;
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: calc(44 * var(--m));
+    line-height: calc(64 * var(--m));
+    color: var(--ink);
+    --roll-hover: var(--nav-link);
+    opacity: 0;
+    transform: translateY(calc(18 * var(--m)));
+    transition:
+      opacity 0.3s var(--ease-out),
+      transform 0.3s var(--ease-out);
+  }
+
+  .nav.is-open .nav__links a:nth-child(n) {
+    opacity: 1;
+    transform: none;
+    transition-duration: 0.7s;
+  }
+
+  .nav.is-open .nav__links a:nth-child(2) { transition-delay: 0.05s; }
+  .nav.is-open .nav__links a:nth-child(3) { transition-delay: 0.1s; }
+  .nav.is-open .nav__links a:nth-child(4) { transition-delay: 0.15s; }
+
+  .nav__links a::before,
+  .nav__links a::after {
+    display: none;
+  }
+
+  /* ---------- Hero ---------- */
+
+  .hero__bg {
+    top: var(--nav-h);
+  }
+
+  .hero__label--left {
+    left: var(--gutter);
+    top: calc(var(--nav-h) + 20 * var(--m));
+  }
+
+  .hero__label--right {
+    left: auto;
+    right: var(--gutter);
+    top: calc(var(--nav-h) + 20 * var(--m));
+  }
+
+  /* ---------- About ---------- */
+
+  .about {
+    height: calc(200vh + 1105 * var(--cu));
+  }
+
+  .features {
+    --u: var(--cu);
+  }
+
+  .features__column {
+    left: 50%;
+    margin-left: calc(-280 * var(--u));
+  }
+
+  /* ---------- Pick a place ---------- */
+
+  .places {
+    height: auto;
+    padding: calc(96 * var(--m)) var(--gutter) calc(112 * var(--m));
+  }
+
+  .places > *,
+  .places__intro > *,
+  .place > :not(.btn) {
+    position: static;
+    width: auto;
+    transform: none;
+  }
+
+  .places__intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, calc(340 * var(--m)));
+    grid-template-areas:
+      "label ."
+      "title lead";
+    column-gap: calc(40 * var(--m));
+    align-items: end;
+  }
+
+  .places__label {
+    grid-area: label;
+    margin-bottom: calc(14 * var(--m));
+  }
+
+  .places__title {
+    grid-area: title;
+  }
+
+  .places__lead {
+    grid-area: lead;
+  }
+
+  .places__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: calc(24 * var(--m));
+    row-gap: calc(88 * var(--m));
+    margin-top: calc(40 * var(--m));
+  }
+
+  .place {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+  }
+
+  /* The orb box keeps its Figma size; the live canvas inside is placed against it. */
+  .place > .place__orb {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: calc(146 * var(--u));
+    height: calc(139 * var(--u));
+    margin: calc(40 * var(--m)) 0 calc(44 * var(--m));
+  }
+
+  .place__name.h35 {
+    font-size: calc(26 * var(--m));
+    line-height: calc(34 * var(--m));
+    white-space: normal;
+  }
+
+  .place__desc,
+  .place__desc--narrow {
+    width: auto;
+    max-width: calc(326 * var(--m));
+    margin-top: calc(14 * var(--m));
+    font-size: calc(14 * var(--m));
+    line-height: calc(23 * var(--m));
+  }
+
+  .place__stats {
+    width: auto;
+    margin: calc(22 * var(--m)) 0 calc(28 * var(--m));
+    font-size: calc(12 * var(--m));
+    line-height: calc(30 * var(--m));
+  }
+
+  .place > .place__cta {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin-top: auto;
+    transform: none;
+  }
+
+  .place__cta:hover {
+    transform: scale(1.035);
+  }
+
+  .place__cta:active {
+    transform: scale(0.98);
+  }
+
+  /* ---------- Flown, not shipped: copy, then the drone over the map, then the numbers ---------- */
+
+  .flown {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "intro"
+      "stage"
+      "stats";
+    height: auto;
+    padding: calc(96 * var(--m)) 0;
+  }
+
+  .flown > * {
+    position: relative;
+    inset: auto;
+  }
+
+  .flown__intro {
+    grid-area: intro;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, calc(300 * var(--m)));
+    grid-template-areas:
+      "label ."
+      "title lead";
+    column-gap: calc(40 * var(--m));
+    align-items: end;
+    padding: 0 var(--gutter);
+  }
+
+  .flown__intro > * {
+    position: static;
+    width: auto;
+  }
+
+  .flown__label {
+    grid-area: label;
+    margin-bottom: calc(14 * var(--m));
+  }
+
+  .flown__title {
+    grid-area: title;
+  }
+
+  .flown__lead {
+    grid-area: lead;
+  }
+
+  .flown__map {
+    grid-area: stage;
+    justify-self: center;
+    align-self: center;
+    width: min(calc(560 * var(--m)), 88vw);
+    height: auto;
+    margin: calc(48 * var(--m)) 0;
+  }
+
+  .flown__drone {
+    grid-area: stage;
+    z-index: 1;
+    justify-self: center;
+    align-self: center;
+    width: min(calc(680 * var(--m)), 112vw);
+    height: auto;
+    aspect-ratio: 790 / 404;
+  }
+
+  .flown__stats {
+    grid-area: stats;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--gutter);
+  }
+
+  .stat {
+    position: static;
+    flex: 1 1 0;
+    min-width: 0;
+    transform: none;
+    white-space: normal;
+  }
+
+  .stat__value {
+    height: auto;
+    font-size: calc(40 * var(--m));
+    line-height: calc(56 * var(--m));
+    letter-spacing: calc(-2 * var(--m));
+    white-space: nowrap;
+  }
+
+  .stat__label {
+    font-size: calc(16 * var(--m));
+    line-height: calc(24 * var(--m));
+  }
+
+  .flown__divider {
+    position: static;
+    flex: none;
+    height: calc(64 * var(--m));
+  }
+
+  /* ---------- Formats: a swipeable row of cards, then the configurator ---------- */
+
+  .formats {
+    height: auto;
+    padding: calc(96 * var(--m)) 0;
+  }
+
+  .formats > * {
+    position: relative;
+    inset: auto;
+  }
+
+  .formats__intro {
+    padding: 0 var(--gutter);
+    text-align: center;
+  }
+
+  .formats__intro > * {
+    position: static;
+  }
+
+  .formats__label {
+    margin-bottom: calc(10 * var(--m));
+  }
+
+  .formats__title {
+    width: auto;
+    transform: none;
+  }
+
+  /* Top padding: room for the products standing out of the cards (and their parallax), which
+     the scroller would otherwise clip. */
+  .formats__cards {
+    display: flex;
+    gap: calc(20 * var(--m));
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding: calc(var(--card-w) / 433 * 100 + 44 * var(--m)) var(--gutter) calc(8 * var(--m));
+    scrollbar-width: none;
+  }
+
+  .formats__cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .format,
+  .format--mask,
+  .format--vessel,
+  .format--atrium {
+    --u: calc(var(--card-w) / 433);
+    position: relative;
+    left: auto;
+    top: auto;
+    flex: none;
+    scroll-snap-align: start;
+  }
+
+  /* Where the row is, and a way to get to each card (src/sections/formats.ts). */
+  .formats__dots {
+    display: flex;
+    justify-content: center;
+    gap: calc(4 * var(--m));
+    margin-top: calc(12 * var(--m));
+  }
+
+  .formats__dots button {
+    display: grid;
+    place-items: center;
+    width: calc(28 * var(--m));
+    height: calc(28 * var(--m));
+  }
+
+  .formats__dots button::before {
+    content: "";
+    width: calc(6 * var(--m));
+    height: calc(6 * var(--m));
+    border-radius: 50%;
+    background: var(--ink);
+    opacity: 0.2;
+    transition:
+      opacity 0.4s var(--ease-out),
+      transform 0.4s var(--ease-out);
+  }
+
+  .formats__dots button[aria-current="true"]::before {
+    opacity: 0.85;
+    transform: scale(1.3);
+  }
+
+  /* The toggle is small at card scale: a larger invisible target around it for fingers. */
+  .format__toggle::after {
+    content: "";
+    position: absolute;
+    inset: calc(-10 * var(--m));
+  }
+
+  /* Configurator */
+
+  .config {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-areas:
+      "vcap bcap"
+      "volume blend"
+      "tcap submit"
+      "sum submit";
+    column-gap: calc(24 * var(--m));
+    padding: calc(40 * var(--m)) var(--gutter) 0;
+    pointer-events: auto;
+  }
+
+  .config > * {
+    position: relative;
+    inset: auto;
+    transform: none;
+  }
+
+  .config__caption {
+    font-size: calc(16 * var(--m));
+    line-height: calc(40 * var(--m));
+  }
+
+  .config__caption--volume { grid-area: vcap; }
+  .config__caption--blend { grid-area: bcap; }
+
+  .config__caption--total {
+    grid-area: tcap;
+    margin-top: calc(32 * var(--m));
+  }
+
+  /* One pill track in CSS (the Figma track SVGs have fixed widths); options share it equally
+     and the thumb takes the checked one's box (src/sections/formats.ts). */
+  .segmented {
+    display: flex;
+    width: auto;
+    height: calc(64 * var(--m));
+    border-radius: calc(32 * var(--m));
+    corner-shape: superellipse(1.585);
+    background: rgb(255 255 255 / 0.15);
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+  }
+
+  .segmented--volume { grid-area: volume; }
+  .segmented--blend { grid-area: blend; }
+
+  .segmented__track {
+    display: none;
+  }
+
+  .segmented__thumb {
+    height: 100%;
+    border-radius: calc(32 * var(--m));
+  }
+
+  .segmented .segmented__option:nth-of-type(n) {
+    position: relative;
+    left: auto;
+    top: auto;
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0 calc(6 * var(--m));
+    font-size: calc(13 * var(--m));
+    line-height: calc(17 * var(--m));
+    text-align: center;
+    white-space: normal;
+    transform: none;
+  }
+
+  .config__total {
+    grid-area: sum;
+    font-size: calc(64 * var(--m));
+    line-height: calc(64 * var(--m));
+  }
+
+  .config__submit {
+    grid-area: submit;
+    align-self: center;
+    justify-self: end;
+    margin-top: calc(32 * var(--m));
+  }
+
+  /* ---------- 48 hours + footer ---------- */
+
+  .finale {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    grid-template-areas:
+      "kv breath"
+      "footer footer";
+    height: auto;
+  }
+
+  .finale > * {
+    position: relative;
+    inset: auto;
+  }
+
+  /* Her faded lower half runs on under the footer, whichever column is taller. */
+  .finale__kv {
+    grid-area: kv;
+    width: 100%;
+    height: auto;
+    margin-bottom: calc(-80 * var(--m));
+    aspect-ratio: 514 / 964;
+  }
+
+  .finale__shade,
+  .finale__grain {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+
+  /* Behind the legal line at the very bottom, as in the design. */
+  .finale__word {
+    position: absolute;
+    left: -6vw;
+    top: auto;
+    bottom: calc(24 * var(--m));
+    width: 112vw;
+    height: auto;
+    aspect-ratio: 1614 / 395;
+  }
+
+  .breath {
+    grid-area: breath;
+    align-self: start;
+    padding: calc(120 * var(--m)) var(--gutter) 0 calc(24 * var(--m));
+  }
+
+  .breath > * {
+    position: static;
+    width: auto;
+  }
+
+  /* The desktop line break would strand "source" on a line of its own. */
+  .breath__title br {
+    display: none;
+  }
+
+  .breath__lead {
+    max-width: calc(402 * var(--m));
+    margin-top: calc(22 * var(--m));
+  }
+
+  .subscribe {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    row-gap: calc(28 * var(--m));
+    margin-top: calc(48 * var(--m));
+    pointer-events: auto;
+  }
+
+  .subscribe > * {
+    position: relative;
+    inset: auto;
+  }
+
+  /* 16 px at least, or iOS zooms the page in when the field takes focus. */
+  .subscribe__input {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: calc(55 * var(--m));
+    font-size: max(16px, 18 * var(--m));
+  }
+
+  .subscribe__line {
+    grid-area: 1 / 1;
+    align-self: end;
+    width: 100%;
+  }
+
+  .subscribe__submit {
+    grid-area: 2 / 1;
+  }
+
+  .footer {
+    grid-area: footer;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "logo links social"
+      "legal legal legal";
+    row-gap: 20vw;
+    padding: 0 var(--gutter) calc(32 * var(--m));
+  }
+
+  .footer > * {
+    position: relative;
+    inset: auto;
+  }
+
+  .footer__logo {
+    grid-area: logo;
+  }
+
+  .footer__links,
+  .footer__social {
+    gap: calc(18 * var(--m));
+    font-size: calc(16 * var(--m));
+    line-height: calc(26 * var(--m));
+  }
+
+  .footer__links { grid-area: links; }
+  .footer__social { grid-area: social; }
+
+  .footer__legal {
+    grid-area: legal;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: calc(10 * var(--m)) calc(24 * var(--m));
+    pointer-events: auto;
+  }
+
+  .footer__legal > * {
+    position: static;
+    font-size: calc(13 * var(--m));
+    line-height: calc(20 * var(--m));
+  }
+
+  .footer__copy {
+    margin-left: auto;
+  }
+}
+
+/* ---------- Hero and About in portrait: copy stacked over the picture ---------- */
+
+@media (max-width: 1199px) and (orientation: portrait) {
+  /* The clip is 16:9: a little over half the screen tall, centred on her (48% across the
+     frame), its top and bottom edges faded into the page. */
+  .hero__media {
+    --mw: max(calc(56 * var(--svh) * 16 / 9), calc(100vw + 40px));
+    left: calc(50% - var(--mw) * 0.48);
+    top: calc(53 * var(--svh) - var(--mw) * 9 / 32);
+    width: var(--mw);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 80%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 80%, transparent);
+  }
+
+  .hero__fade {
+    top: calc(40 * var(--svh));
+  }
+
+  /* Its spaced-out words need the width of a landscape screen. */
+  .hero__label--right {
+    display: none;
+  }
+
+  .hero__title {
+    left: var(--gutter);
+    top: calc(var(--nav-h) + 72 * var(--m));
+    width: auto;
+  }
+
+  /* Measured from the small viewport's bottom: 100vh is the stage, 100svh what is visible. */
+  .hero__lead {
+    left: auto;
+    right: var(--gutter);
+    top: auto;
+    bottom: calc(100vh - 100 * var(--svh) + 150 * var(--m));
+    width: calc(320 * var(--m));
+  }
+
+  .hero__cta {
+    left: auto;
+    right: calc(var(--gutter) + 65 * var(--m));
+    top: auto;
+    bottom: calc(100vh - 100 * var(--svh) + 48 * var(--m));
+  }
+
+  /* About: the mask (30% across the 16:10 clip) stands in the lower part of the screen; the
+     clip never leaves a gap at the sides, its top edge fades into the scene's gradient. */
+  .about__title {
+    left: var(--gutter);
+    top: calc(var(--nav-h) + 40 * var(--m));
+    width: auto;
+  }
+
+  .about__lead {
+    left: var(--gutter);
+    top: calc(var(--nav-h) + 56 * var(--m) + 2 * var(--h50-line));
+    width: min(calc(374 * var(--m)), 100vw - 2 * var(--gutter));
+  }
+
+  .about__frames {
+    --fw: calc(72 * var(--svh) * 1.6);
+    left: min(0px, calc(50% - var(--fw) * 0.3));
+    top: calc(30 * var(--svh));
+    width: var(--fw);
+    height: calc(72 * var(--svh));
+    transform: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%);
+    mask-image: linear-gradient(to bottom, transparent, #000 22%);
+  }
+}
+
+/* ---------- Hero and About in landscape: the desktop composition ---------- */
+
+@media (max-width: 1199px) and (orientation: landscape) {
+  .hero__media {
+    left: calc(-28 / 1440 * 100vw);
+    top: calc(38 / 1440 * 100vw);
+    width: calc(1484 / 1440 * 100vw);
+  }
+
+  .hero__title {
+    left: var(--gutter);
+    top: calc(54 * var(--svh));
+    width: auto;
+  }
+
+  .hero__lead {
+    left: auto;
+    right: var(--gutter);
+    top: calc(55 * var(--svh));
+    width: calc(300 * var(--m));
+  }
+
+  .hero__cta {
+    left: auto;
+    right: calc(var(--gutter) + 45 * var(--m));
+    top: calc(55 * var(--svh) + 108 * var(--m));
+  }
+
+  .about__title {
+    left: auto;
+    right: var(--gutter);
+    top: calc(34 * var(--svh));
+    width: calc(330 * var(--m));
+  }
+
+  .about__lead {
+    left: auto;
+    right: var(--gutter);
+    top: calc(34 * var(--svh) + 20 * var(--m) + 2 * var(--h50-line));
+    width: calc(330 * var(--m));
+  }
+
+  /* Left of centre, over the mask, clear of the copy on the right. */
+  .features__column {
+    left: 32%;
+  }
+}
+
+/* Phones on their side: a screen only ~400 px tall. */
+@media (max-width: 1199px) and (orientation: landscape) and (max-height: 520px) {
+  :root {
+    --nav-h: calc(52 * var(--m));
+    --h50-size: calc(32 * var(--m));
+    --h50-line: calc(38 * var(--m));
+  }
+
+  /* The clip as tall as the screen, so narrower than it: her left of centre, the copy clear on
+     the right, the clip's side edges faded out. */
+  .hero__media {
+    --mh: calc(104 * var(--svh));
+    left: calc(44% - var(--mh) * 16 / 9 * 0.48);
+    top: calc(var(--nav-h) * 0.4);
+    width: calc(var(--mh) * 16 / 9);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+  }
+
+  .hero__title {
+    top: calc(40 * var(--svh));
+  }
+
+  .hero__lead {
+    top: calc(40 * var(--svh));
+    width: calc(250 * var(--m));
+    font-size: calc(13 * var(--m));
+    line-height: calc(20 * var(--m));
+  }
+
+  .hero__cta {
+    --u: calc(0.8 * var(--m));
+    right: calc(var(--gutter) + 46 * var(--m));
+    top: calc(40 * var(--svh) + 84 * var(--m));
+  }
+
+  .about__title {
+    top: calc(28 * var(--svh));
+  }
+
+  .about__lead {
+    top: calc(28 * var(--svh) + 16 * var(--m) + 2 * var(--h50-line));
+  }
+}
+
+/* ======================================== Phone ======================================== */
+
+@media (max-width: 599px) {
+  :root {
+    --m: clamp(0.86px, calc(100vw / 390), 1.2px);
+    --gutter: calc(20 * var(--m));
+    --nav-h: calc(56 * var(--m));
+    --nav-h-compact: calc(48 * var(--m));
+    --h50-size: calc(38 * var(--m));
+    --h50-line: calc(44 * var(--m));
+    --card-w: min(calc(300 * var(--m)), 100vw - 2 * var(--gutter) - 40 * var(--m));
+  }
+
+  .lead {
+    font-size: calc(14 * var(--m));
+    line-height: calc(23 * var(--m));
+  }
+
+  .label {
+    font-size: calc(9 * var(--m));
+    letter-spacing: calc(3.2 * var(--m));
+  }
+
+  /* Hero: the copy under the title runs the full width at the bottom. */
+  .hero__title {
+    top: calc(var(--nav-h) + 56 * var(--m));
+  }
+
+  .hero__lead {
+    left: var(--gutter);
+    right: auto;
+    bottom: calc(100vh - 100 * var(--svh) + 124 * var(--m));
+    width: min(calc(300 * var(--m)), 100vw - 2 * var(--gutter));
+  }
+
+  .hero__cta {
+    --u: calc(0.86 * var(--m));
+    left: var(--gutter);
+    right: auto;
+    bottom: calc(100vh - 100 * var(--svh) + 36 * var(--m));
+  }
+
+  .about__title {
+    top: calc(var(--nav-h) + 32 * var(--m));
+  }
+
+  .about__lead {
+    top: calc(var(--nav-h) + 46 * var(--m) + 2 * var(--h50-line));
+  }
+
+  /* Places: one column. */
+  .places {
+    padding: calc(72 * var(--m)) var(--gutter) calc(88 * var(--m));
+  }
+
+  .places__intro {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "label"
+      "title"
+      "lead";
+  }
+
+  .places__lead {
+    margin-top: calc(18 * var(--m));
+  }
+
+  .places__grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(72 * var(--m));
+    margin-top: calc(16 * var(--m));
+  }
+
+  .place > .place__orb {
+    margin: calc(32 * var(--m)) 0 calc(36 * var(--m));
+  }
+
+  .place__name.h35 {
+    font-size: calc(30 * var(--m));
+    line-height: calc(38 * var(--m));
+  }
+
+  /* Flown: one column; three small numbers in a row. */
+  .flown {
+    padding: calc(72 * var(--m)) 0 calc(80 * var(--m));
+  }
+
+  .flown__intro {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "label"
+      "title"
+      "lead";
+  }
+
+  .flown__lead {
+    margin-top: calc(18 * var(--m));
+  }
+
+  .flown__map {
+    margin: calc(24 * var(--m)) 0;
+  }
+
+  .stat__value {
+    font-size: calc(26 * var(--m));
+    line-height: calc(38 * var(--m));
+    letter-spacing: calc(-1.3 * var(--m));
+  }
+
+  .stat__label {
+    font-size: calc(11 * var(--m));
+    line-height: calc(16 * var(--m));
+  }
+
+  .flown__divider {
+    height: calc(48 * var(--m));
+  }
+
+  /* Formats */
+  .formats {
+    padding: calc(72 * var(--m)) 0 calc(80 * var(--m));
+  }
+
+  /* Configurator: one column; total and its amount share a line, the button runs full width. */
+  .config {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "vcap vcap"
+      "volume volume"
+      "bcap bcap"
+      "blend blend"
+      "tcap sum"
+      "submit submit";
+    padding-top: calc(32 * var(--m));
+  }
+
+  .config__caption {
+    font-size: calc(14 * var(--m));
+  }
+
+  .config__caption--blend {
+    margin-top: calc(12 * var(--m));
+  }
+
+  .config__caption--total {
+    align-self: end;
+  }
+
+  .segmented {
+    height: calc(56 * var(--m));
+  }
+
+  .segmented .segmented__option:nth-of-type(n) {
+    font-size: calc(11 * var(--m));
+    line-height: calc(14 * var(--m));
+  }
+
+  .config__total {
+    align-self: end;
+    margin-top: calc(32 * var(--m));
+    font-size: calc(52 * var(--m));
+    line-height: calc(52 * var(--m));
+  }
+
+  .config__submit {
+    justify-self: stretch;
+    width: auto;
+    height: calc(64 * var(--m));
+    margin-top: calc(24 * var(--m));
+  }
+
+  /* Finale: the copy and the form first, over the light part of the gradient; her picture
+     below, fading into the dark footer. */
+  .finale {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "breath"
+      "kv"
+      "footer";
+  }
+
+  .breath {
+    padding: calc(72 * var(--m)) var(--gutter) 0;
+  }
+
+  .subscribe {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(20 * var(--m));
+    margin-top: calc(40 * var(--m));
+  }
+
+  /* Full width: the Figma squircle (white 30 %, frosted) redrawn in CSS, as the SVG would stretch. */
+  .subscribe__submit {
+    grid-area: 2 / 1;
+    width: 100%;
+    height: calc(64 * var(--m));
+    border-radius: 999px;
+    corner-shape: superellipse(1.585);
+    background: rgb(255 255 255 / 0.3);
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+  }
+
+  .finale__kv {
+    width: 74vw;
+    margin-top: calc(24 * var(--m));
+    margin-bottom: calc(-120 * var(--m));
+  }
+
+  .footer {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "logo logo"
+      "links social"
+      "legal legal";
+    row-gap: calc(40 * var(--m));
+  }
+
+  .footer__legal {
+    margin-top: 16vw;
+  }
+}

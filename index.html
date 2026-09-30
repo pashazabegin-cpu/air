@@ -24,7 +24,7 @@
         <img class="logo__mark" src="/img/logo-mark.svg" width="35.699" height="35.699" alt="" />
         <span class="logo__word">Airscape</span>
       </a>
-      <nav class="nav__links" aria-label="Main">
+      <nav class="nav__links" id="nav-links" aria-label="Main">
         <a href="#about" data-roll>About</a>
         <a href="#product" data-roll>Product</a>
         <a href="#delivery" data-roll>Delivery</a>
@@ -32,6 +32,8 @@
       </nav>
       <a class="nav__icon nav__icon--user" href="#" aria-label="Account"><img src="/img/icon-user.svg" width="24" height="24" alt="" /></a>
       <a class="nav__icon nav__icon--cart" href="#" aria-label="Cart"><img src="/img/icon-cart.svg" width="24" height="24" alt="" /></a>
+      <!-- Compact layout only: opens .nav__links as a panel (src/lib/menu.ts). -->
+      <button class="nav__burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
     </header>
 
     <!-- Hero pins while scrolling turns her to the camera, then scrolls away into About. -->
@@ -243,7 +245,7 @@
           <div class="finale__grain"></div>
 
           <section class="breath" data-reveal-group>
-            <h2 class="h50 breath__title" data-reveal="heading">48 hours from source<br />to your first breath.</h2>
+            <h2 class="h50 breath__title" data-reveal="heading">48 hours from source <br />to your first breath.</h2>
             <p class="lead breath__lead" data-reveal="text">Batch certificate with every shipment. Blend swap free for 30 days.</p>
             <form class="subscribe" action="#">
               <label class="visually-hidden" for="email">Email</label>
