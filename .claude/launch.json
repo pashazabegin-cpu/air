@@ -3,7 +3,9 @@
   "configurations": [
     {
       "name": "air",
-      "url": "http://127.0.0.1:8765"
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 8765
     }
   ]
 }
