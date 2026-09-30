@@ -26,11 +26,14 @@ export class FrameSequence {
     return this.frames.length === this.urls.length && this.frames.length > 0;
   }
 
-  async load() {
+  /** Downloads and decodes every frame; `onFrame` fires as each one is ready (the preloader counts them). */
+  async load(onFrame?: () => void) {
     this.frames = await Promise.all(
       this.urls.map(async (url) => {
         const res = await fetch(url);
-        return createImageBitmap(await res.blob());
+        const frame = await createImageBitmap(await res.blob());
+        onFrame?.();
+        return frame;
       }),
     );
     this.canvas.width = this.frames[0].width;

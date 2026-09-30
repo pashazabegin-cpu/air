@@ -222,12 +222,17 @@ button {
    keeps its own look and lights the rim only under the cursor. */
 .btn--metal.is-metal {
   background-image: none;
-  transition: none;
+  transition: scale 0.6s var(--ease-out);
 }
 
+/* Grows on hover through `scale`, kept apart from the transform GSAP animates in the hero intro. */
 .btn--metal.is-metal:hover,
 .btn--metal.is-metal:active {
   transform: none;
+}
+
+.btn--metal.is-metal:hover {
+  scale: 1.05;
 }
 
 .metal__rim,
@@ -325,13 +330,139 @@ button {
   }
 }
 
+/* ---------- Cursor (Figma 70:796, src/lib/cursor.ts) ----------
+   Mouse only. Dot and glass are separate fixed layers: an opacity or filter on a shared parent
+   would cut the glass off from the page behind it. Both move by `translate` (set per frame). */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+
+.cursor__glass,
+.cursor__dot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+/* 28 px at rest, the Figma 40 px over links and buttons. */
+.cursor__glass {
+  z-index: 200;
+  width: calc(40 * var(--u));
+  height: calc(40 * var(--u));
+  margin: calc(-20 * var(--u)) 0 0 calc(-20 * var(--u));
+  scale: var(--lens-rest);
+  transition: scale 0.3s var(--ease-out);
+}
+
+.cursor.is-hover .cursor__glass {
+  scale: 1;
+}
+
+.cursor__lens,
+.cursor__sheen,
+.cursor__dot {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.cursor.is-visible :is(.cursor__lens, .cursor__sheen, .cursor__dot) {
+  opacity: 1;
+}
+
+/* The Figma 10 % white. No frost, unlike the About cards: it hid whatever the cursor was on. */
+.cursor__lens {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.1);
+}
+
+/* Chromium: the refracting filter instead. Its box reaches out past the disc so the rim can
+   take its picture from around it, as liquidGL does; only the disc is shown. */
+.cursor.is-refracting .cursor__lens {
+  inset: calc(var(--lens-reach) * var(--u) * -1);
+  border-radius: 0;
+  clip-path: circle(calc(20 * var(--u)));
+  backdrop-filter: url("#cursor-lens");
+}
+
+/* liquidGL's two drifting highlights (0.4 and 0.5 of the lens wide). Its shader adds them; a
+   blend mode here would isolate the disc and leave the lens nothing to see, so they lie on top. */
+.cursor__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle calc(16 * var(--u)) at var(--l0x, 30%) var(--l0y, 30%), rgb(255 255 255 / 0.1), transparent),
+    radial-gradient(circle calc(20 * var(--u)) at var(--l1x, 70%) var(--l1y, 60%), rgb(255 255 255 / 0.08), transparent);
+}
+
+/* White through `difference`: near black on the light pages, white over the dark ones.
+   Safe for the glass only because the dot is its own layer, not inside .cursor__glass. */
+.cursor__dot {
+  z-index: 201;
+  width: calc(6 * var(--u));
+  height: calc(6 * var(--u));
+  margin: calc(-3 * var(--u)) 0 0 calc(-3 * var(--u));
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+}
+
+.cursor__filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Hover text roll (src/lib/text-roll.ts, after 21st.dev's TextStaggerHover): each letter leaves
+   upward as its copy rises from below, 25 ms apart. The copy takes --roll-hover when a link
+   changes colour on hover. Top-aligned slots of one line-height keep the text where it was. */
+.roll {
+  white-space: nowrap;
+}
+
+.roll__char {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.roll__char > * {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: calc(var(--i) * 25ms);
+}
+
+.roll__char > :last-child {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--roll-hover, currentColor);
+  transform: translateY(110%);
+}
+
+[data-roll]:is(:hover, :focus-visible) .roll__char > :first-child {
+  transform: translateY(-110%);
+}
+
+[data-roll]:is(:hover, :focus-visible) .roll__char > :last-child {
+  transform: none;
+}
+
 /* Word pieces produced by the scroll text reveal. */
 .rw {
   will-change: opacity, filter, transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .btn {
+  .btn,
+  .btn--metal.is-metal,
+  .roll__char > * {
     transition: none;
   }
 }

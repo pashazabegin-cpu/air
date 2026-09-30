@@ -7,34 +7,53 @@ import { addReveal } from "../lib/reveal";
 const INTRO_TIMEOUT_MS = 12000;
 
 /**
- * Hero = preloader + scroll video.
- * 1. hero.mp4 plays from 0 to `from` (6.0 s) while the interface assembles itself; scroll is locked.
- * 2. At `from` the video stops and hands over to a canvas holding frames `from`…end.
- * 3. The hero stays pinned for one screen of scroll that scrubs those frames: she turns to
+ * Hero = scroll video with an intro.
+ * 1. Under the preloader the frames download and hero.mp4 buffers up to `from` (6.0 s): `loadHero`.
+ * 2. As the preloader lifts, the video plays from 0 to `from` while the interface assembles itself:
+ *    the header slides down from the top, then the copy and the button. Scroll is locked: `playHero`.
+ * 3. At `from` the video stops and hands over to a canvas holding frames `from`…end.
+ * 4. The hero stays pinned for one screen of scroll that scrubs those frames: she turns to
  *    the camera and freezes, then the page scrolls on into About with no seam.
  */
-export async function initHero(lenis: Lenis) {
+export function loadHero() {
+  const hero = document.querySelector<HTMLElement>(".hero")!;
+  const video = hero.querySelector<HTMLVideoElement>(".hero__video")!;
+  const canvas = hero.querySelector<HTMLCanvasElement>(".hero__frames")!;
+
+  let stopAt = Infinity;
+  let framesIn = 0;
+  let framesTotal = 1;
+  const ready = openSequence("hero", canvas).then(async ({ manifest, sequence }) => {
+    stopAt = manifest.from;
+    framesTotal = manifest.count;
+    await sequence.load(() => framesIn++);
+    return { manifest, sequence };
+  });
+
+  /** Share of the intro on hand, 0…1: frames decoded and video buffered up to `from`. */
+  const progress = () => (framesIn / framesTotal + buffered(video, stopAt)) / 2;
+  return { ready, progress };
+}
+
+export type HeroLoad = ReturnType<typeof loadHero>;
+
+export async function playHero(lenis: Lenis, { ready }: HeroLoad) {
   const hero = document.querySelector<HTMLElement>(".hero")!;
   const video = hero.querySelector<HTMLVideoElement>(".hero__video")!;
   const canvas = hero.querySelector<HTMLCanvasElement>(".hero__frames")!;
   const content = hero.querySelector<HTMLElement>(".hero__content")!;
 
-  const { manifest, sequence: frames } = await openSequence("hero", canvas);
-  const framesLoaded = frames.load();
+  const { manifest, sequence: frames } = await ready;
 
   const intro = buildIntro(content);
   document.body.classList.remove("is-intro");
-
   const videoStopped = playUntil(video, manifest.from).catch(() => undefined);
-  video.addEventListener("playing", () => intro.play(), { once: true });
-  // Autoplay refused or slow to start: run the interface intro on its own clock.
-  setTimeout(() => intro.isActive() || intro.progress() > 0 || intro.play(), 900);
+  intro.play();
 
   await Promise.race([
-    Promise.all([videoStopped, framesLoaded, intro.then()]),
+    Promise.all([videoStopped, intro.then()]),
     new Promise((r) => setTimeout(r, INTRO_TIMEOUT_MS)),
   ]);
-  await framesLoaded;
 
   frames.render(0);
   gsap.set(canvas, { opacity: 1 });
@@ -45,29 +64,31 @@ export async function initHero(lenis: Lenis) {
   lenis.start();
 }
 
+function buffered(video: HTMLVideoElement, until: number) {
+  if (video.error || video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) return 1;
+  if (!Number.isFinite(until) || !video.buffered.length) return 0;
+  return Math.min(video.buffered.end(0) / until, 1);
+}
+
 function buildIntro(content: HTMLElement) {
   const nav = document.querySelector<HTMLElement>(".nav")!;
-  // The header's own CSS transitions (compact state) would drag behind every GSAP frame: off for
-  // the intro. Its inline styles are cleared at the end so the compact state is plain CSS again.
-  nav.classList.add("is-arriving");
-  const tl = gsap.timeline({
-    paused: true,
-    defaults: { ease: "power3.out" },
-    onComplete: () => nav.classList.remove("is-arriving"),
-  });
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
 
-  // The dotted logo spins like a loader for as long as the video intro runs.
+  // The header comes down from above the screen in one piece, like a native top bar, as the
+  // preloader lifts. Its own CSS transitions (compact state) would drag behind every GSAP frame:
+  // off for the slide, and its inline transform is cleared after so the states are plain CSS again.
+  nav.classList.add("is-arriving");
   tl.fromTo(
-    nav.querySelector(".logo__mark"),
-    { rotate: -300, scale: 0.4, opacity: 0 },
-    { rotate: 0, scale: 1, opacity: 1, duration: 5.4, ease: "power2.inOut", clearProps: "transform,opacity" },
-    0.1,
-  );
-  tl.fromTo(
-    nav.querySelectorAll(".logo__word, .nav__links a, .nav__icon"),
-    { opacity: 0, y: -12, filter: "blur(8px)" },
-    { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2, stagger: 0.08, clearProps: "transform,opacity,filter" },
-    0.9,
+    nav,
+    { yPercent: -100 },
+    {
+      yPercent: 0,
+      duration: 1.3,
+      ease: "expo.out",
+      clearProps: "transform",
+      onComplete: () => nav.classList.remove("is-arriving"),
+    },
+    0.35,
   );
 
   // Labels, title and lead appear together, then the button.
@@ -75,7 +96,8 @@ function buildIntro(content: HTMLElement) {
   tl.fromTo(
     content.querySelector(".hero__cta"),
     { opacity: 0, scale: 0.9, filter: "blur(10px)" },
-    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.4 },
+    // Cleared after, or GSAP's inline `scale: none` would block the button's hover scale.
+    { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.4, clearProps: "transform,opacity,filter" },
     3.3,
   );
   return tl;

@@ -5,15 +5,19 @@ import "./styles/main.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { initCursor } from "./lib/cursor";
+import { initEdgeBlur } from "./lib/edge-blur";
 import { initHeader } from "./lib/header";
 import { initMetalButtons } from "./lib/metal-button";
 import { initParallax } from "./lib/parallax";
+import { createPreloader } from "./lib/preloader";
 import { initScrollReveals } from "./lib/reveal";
 import { createSmoothScroll } from "./lib/smooth-scroll";
+import { initTextRoll } from "./lib/text-roll";
 import { initAbout } from "./sections/about";
 import { initDetails } from "./sections/details";
 import { initFormats } from "./sections/formats";
-import { initHero } from "./sections/hero";
+import { loadHero, playHero } from "./sections/hero";
 import { initPlaces } from "./sections/places";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -22,25 +26,35 @@ async function boot() {
   history.scrollRestoration = "manual";
   window.scrollTo(0, 0);
 
+  initCursor();
+  const preloader = createPreloader();
   const lenis = createSmoothScroll();
-  lenis.stop(); // locked until the preloader finishes
-  initHeader(lenis);
+  lenis.stop(); // locked until the hero intro finishes
+  initHeader();
+  initTextRoll();
   if (import.meta.env.DEV) Object.assign(window, { lenis, ScrollTrigger });
 
-  await document.fonts.ready;
+  // Everything the preloader counts starts now. The glass goes first once the fonts are in:
+  // its one-off snapshot of About happens under the preloader.
+  const hero = loadHero();
+  const glass = document.fonts.ready.then(initAbout);
+  preloader.track(document.fonts.ready, 1);
+  preloader.track(glass, 2);
+  preloader.track(hero.progress, 6);
 
-  // Glass first: its one-off page snapshot happens while the screen is still white.
-  await initAbout();
-
+  await glass;
   initScrollReveals((group) => !!group.closest(".hero") || group.matches(".about__scene"));
   initPlaces();
   initMetalButtons();
   initParallax();
   initDetails();
   initFormats();
+  initEdgeBlur();
   ScrollTrigger.refresh();
 
-  await initHero(lenis);
+  await preloader.complete;
+  preloader.leave();
+  await playHero(lenis, hero);
   ScrollTrigger.refresh();
 }
 

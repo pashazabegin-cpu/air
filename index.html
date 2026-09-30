@@ -11,6 +11,13 @@
     <script type="module" src="/src/main.ts"></script>
   </head>
   <body class="is-intro">
+    <!-- Counts up with the real downloads (src/lib/preloader.ts), then lifts off the hero. -->
+    <div class="preloader" role="progressbar" aria-label="Loading" aria-busy="true" aria-valuemin="0" aria-valuemax="100" aria-valuenow="1">
+      <img class="preloader__glow" src="/img/preloader-glow.svg" width="793.692" height="793.692" alt="" />
+      <img class="preloader__mark" src="/img/preloader-mark.svg" width="76.0661" height="76.0671" alt="" />
+      <p class="preloader__count" aria-hidden="true">01</p>
+    </div>
+
     <!-- Fixed: full header at the top, compact frosted glass once the page scrolls. -->
     <header class="nav">
       <a class="logo nav__logo" href="#" aria-label="Airscape home">
@@ -18,10 +25,10 @@
         <span class="logo__word">Airscape</span>
       </a>
       <nav class="nav__links" aria-label="Main">
-        <a href="#about">About</a>
-        <a href="#product">Product</a>
-        <a href="#delivery">Delivery</a>
-        <a href="#format">Format</a>
+        <a href="#about" data-roll>About</a>
+        <a href="#product" data-roll>Product</a>
+        <a href="#delivery" data-roll>Delivery</a>
+        <a href="#format" data-roll>Format</a>
       </nav>
       <a class="nav__icon nav__icon--user" href="#" aria-label="Account"><img src="/img/icon-user.svg" width="24" height="24" alt="" /></a>
       <a class="nav__icon nav__icon--cart" href="#" aria-label="Cart"><img src="/img/icon-cart.svg" width="24" height="24" alt="" /></a>
@@ -42,7 +49,7 @@
           <p class="label hero__label hero__label--right" data-reveal="text">your   New                       air</p>
           <h1 class="h50 hero__title" data-reveal="heading">Breathe<br />the cleanest<br />places</h1>
           <p class="lead hero__lead" data-reveal="text">Sourced air, blended to your spec, flown to your door across Europe.</p>
-          <a class="btn btn--preorder btn--metal hero__cta" href="#format">Pre-order now</a>
+          <a class="btn btn--preorder btn--metal hero__cta" href="#format" data-roll>Pre-order now</a>
         </div>
       </div>
     </section>
@@ -101,21 +108,21 @@
             <h3 class="h35 place__name" data-reveal="text">Forest meadows</h3>
             <p class="place__desc" data-reveal="text">Carpathians, 820 m.<br />Pine terpenes at 4.2 ppb, pollen filtered out.</p>
             <p class="place__stats" data-reveal="text">21.4% — O₂<br />64% — Humidity<br />820m — Altitude</p>
-            <button class="btn btn--cart btn--metal-hover place__cta" type="button">Add to cart</button>
+            <button class="btn btn--cart btn--metal-hover place__cta" type="button" data-roll>Add to cart</button>
           </article>
           <article class="place" data-reveal-group>
             <div class="place__orb" data-orb="sea" data-parallax="-60"><img src="/img/blend-sea.webp" width="146" height="139" alt="" /></div>
             <h3 class="h35 place__name" data-reveal="text">Sea breeze</h3>
             <p class="place__desc place__desc--narrow" data-reveal="text">Atlantic shelf, 3 km offshore. Iodine at 0.8 ppb, salt aerosol retained.</p>
             <p class="place__stats" data-reveal="text">20.9% — O₂<br />78% — Humidity<br />3.1g — Salt / m³</p>
-            <button class="btn btn--cart btn--metal-hover place__cta" type="button">Add to cart</button>
+            <button class="btn btn--cart btn--metal-hover place__cta" type="button" data-roll>Add to cart</button>
           </article>
           <article class="place" data-reveal-group>
             <div class="place__orb" data-orb="antarctic" data-parallax="-40"><img src="/img/blend-antarctic.webp" width="146" height="139" alt="" /></div>
             <h3 class="h35 place__name" data-reveal="text">Antarctic Ice</h3>
             <p class="place__desc" data-reveal="text">Queen Maud Land. 0.02 µg particulate per m³ — the lowest on record.</p>
             <p class="place__stats" data-reveal="text">20.6% — O₂<br />12% — Humidity<br />−54° — At capture</p>
-            <button class="btn btn--cart btn--metal-hover place__cta" type="button">Add to cart</button>
+            <button class="btn btn--cart btn--metal-hover place__cta" type="button" data-roll>Add to cart</button>
           </article>
         </div>
       </section>
@@ -224,7 +231,7 @@
 
             <p class="config__caption config__caption--total" data-reveal="text">Total, delivered:</p>
             <p class="config__total" aria-live="polite">€<span class="config__amount">300</span></p>
-            <button class="btn btn--order btn--metal config__submit" type="submit">Add to order</button>
+            <button class="btn btn--order btn--metal config__submit" type="submit" data-roll>Add to order</button>
           </form>
         </section>
 
@@ -242,7 +249,7 @@
               <label class="visually-hidden" for="email">Email</label>
               <input class="subscribe__input" id="email" type="email" placeholder="you@address.ru" autocomplete="email" />
               <img class="subscribe__line" src="/img/email-line.svg" width="370" height="1" alt="" />
-              <button class="btn btn--reserve subscribe__submit" type="submit">Reserve air</button>
+              <button class="btn btn--reserve subscribe__submit" type="submit" data-roll>Reserve air</button>
             </form>
           </section>
 
@@ -252,24 +259,27 @@
               <span class="logo__word">Airscape</span>
             </a>
             <nav class="footer__links" aria-label="Footer">
-              <a href="#about">About</a>
-              <a href="#product">Product</a>
-              <a href="#delivery">Delivery</a>
-              <a href="#format">Format</a>
+              <a href="#about" data-roll>About</a>
+              <a href="#product" data-roll>Product</a>
+              <a href="#delivery" data-roll>Delivery</a>
+              <a href="#format" data-roll>Format</a>
             </nav>
             <nav class="footer__social" aria-label="Social">
-              <a href="#">Instagram</a>
-              <a href="#">Facebook</a>
+              <a href="#" data-roll>Instagram</a>
+              <a href="#" data-roll>Facebook</a>
             </nav>
             <div class="footer__legal">
-              <a class="footer__privacy" href="#">Privacy</a>
-              <a class="footer__terms" href="#">Terms of service</a>
-              <a class="footer__cookies" href="#">Cookie policy</a>
+              <a class="footer__privacy" href="#" data-roll>Privacy</a>
+              <a class="footer__terms" href="#" data-roll>Terms of service</a>
+              <a class="footer__cookies" href="#" data-roll>Cookie policy</a>
               <p class="footer__copy">©2056</p>
             </div>
           </footer>
         </div>
       </div>
     </main>
+
+    <!-- Progressive blur along the bottom edge of the screen (src/lib/edge-blur.ts). -->
+    <div class="edge-blur" aria-hidden="true"></div>
   </body>
 </html>

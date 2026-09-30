@@ -1,5 +1,66 @@
 /* Coordinates below are the Figma artboard values (1440 wide), multiplied by --u. */
 
+/* ================= Preloader (frame 64:505, centred on the screen) ================= */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.preloader > * {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+/* The #c5e3e7 disc (r 158.5) with its blur baked in: the SVG box is how far the blur reaches. */
+.preloader__glow {
+  width: calc(793.692 * var(--u));
+  height: calc(793.692 * var(--u));
+  margin: calc(-396.346 * var(--u)) 0 0 calc(-396.346 * var(--u));
+}
+
+.preloader__mark {
+  width: calc(76.066 * var(--u));
+  height: calc(76.067 * var(--u));
+  margin: calc(-38 * var(--u)) 0 0 calc(-38 * var(--u));
+}
+
+/* A zero-width box centred where "01" is centred in the design, so 100 stays centred too. */
+.preloader__count {
+  display: flex;
+  justify-content: center;
+  width: 0;
+  margin: calc(-10 * var(--u)) 0 0 calc(0.6 * var(--u));
+  font-size: calc(12.712 * var(--u));
+  line-height: calc(21.451 * var(--u));
+  white-space: nowrap;
+}
+
+/* ================= Bottom edge blur (src/lib/edge-blur.ts) =================
+   Under the header, over everything else. Leaves by sliding down: an opacity on this wrapper
+   would cut its blur layers off from the page they blur. */
+.edge-blur {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 45;
+  height: calc(130 * var(--u));
+  pointer-events: none;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.edge-blur.is-away {
+  transform: translateY(100%);
+}
+
+.edge-blur > * {
+  position: absolute;
+  inset: 0;
+}
+
 /* ================= Hero (pinned while she turns, then scrolls into About) ================= */
 
 .hero {
@@ -58,12 +119,14 @@
 }
 
 /* ---------- Header ----------
-   Two states from the Figma file: the full header (92 tall, frame 51:5) and, once the page
-   scrolls, a compact bar of frosted glass (33 tall, frame 59:445). Parts move by transform only,
+   Two states from the Figma file: the full header (92 tall, frame 51:5) and, once the first
+   screen is half scrolled away, a compact bar of frosted glass (33 tall, frame 59:445). Parts move by transform only,
    so the switch plays as one animation. The glass is backdrop-filter rather than liquidGL: that
    refracts a still snapshot of the page, which can't follow the videos and orbs passing under a
    fixed bar. Frosted harder than the About cards. Over the dark end of the page the menu turns
-   white, and it leaves once the footer (with its own menu) comes in: src/lib/header.ts. */
+   white, and it leaves once the footer (with its own menu) comes in: src/lib/header.ts.
+   -webkit-backdrop-filter always goes before backdrop-filter: the build's CSS minifier keeps only
+   the last of the pair, and Chrome ignores the prefixed one. */
 .nav {
   --nav-ease: 0.6s var(--ease-out);
   position: fixed;
@@ -71,13 +134,13 @@
   z-index: 50;
   height: calc(92 * var(--u));
   background-color: rgb(255 255 255 / 1);
-  backdrop-filter: blur(0) saturate(100%);
   -webkit-backdrop-filter: blur(0) saturate(100%);
+  backdrop-filter: blur(0) saturate(100%);
   transition:
     height var(--nav-ease),
     background-color var(--nav-ease),
-    backdrop-filter var(--nav-ease),
     -webkit-backdrop-filter var(--nav-ease),
+    backdrop-filter var(--nav-ease),
     transform var(--nav-ease),
     opacity var(--nav-ease);
 }
@@ -85,8 +148,8 @@
 .nav.is-compact {
   height: calc(33 * var(--u));
   background-color: rgb(255 255 255 / 0.2);
-  backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
 }
 
 .nav.is-compact.is-dark {
@@ -138,6 +201,8 @@
   line-height: calc(19.505 * var(--u));
   white-space: nowrap;
   color: var(--nav-link);
+  /* the hover colour: the letters that roll in take it (see .roll in base.css) */
+  --roll-hover: var(--ink);
   transform-origin: 0 50%;
   transition:
     color 0.4s var(--ease-out),
@@ -147,23 +212,51 @@
 /* Compact: 10 px black, centred on the bar (49.75 → 16.5). */
 .nav.is-compact .nav__links a {
   color: var(--ink);
+  --roll-hover: var(--nav-link);
   transform: translateY(calc(-33.25 * var(--u))) scale(0.8333);
-}
-
-.nav__links a:hover {
-  color: var(--ink);
-}
-
-.nav.is-compact .nav__links a:hover {
-  color: var(--nav-link);
 }
 
 .nav.is-dark .nav__links a {
   color: rgb(255 255 255 / 0.75);
+  --roll-hover: var(--paper);
 }
 
-.nav.is-dark .nav__links a:hover {
-  color: var(--paper);
+/* Hover glow (Figma 65:614 full, 65:556 compact): warm light rising from the bar's bottom edge
+   under the hovered link, exported with its blur. Each link carries its own, so moving along the
+   menu cross-fades them. Full header: over the text, as in the file; compact: under it (::before
+   paints before the letters, ::after after). The compact one lives in the link's own space,
+   which that state scales by 10/12, hence its sizes × 1.2. */
+.nav__links a::before,
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  background: center / 100% 100% no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+/* Compact: 157 × 33, the bar's whole height. */
+.nav__links a::before {
+  left: calc(50% - 94.2 * var(--u));
+  top: calc(-10.05 * var(--u));
+  width: calc(188.4 * var(--u));
+  height: calc(39.6 * var(--u));
+  background-image: url("/img/nav-glow-compact.svg");
+}
+
+/* Full: 354 × 92, the header's whole height. */
+.nav__links a::after {
+  left: calc(50% - 183.5 * var(--u));
+  top: calc(-40 * var(--u));
+  width: calc(354 * var(--u));
+  height: calc(92 * var(--u));
+  background-image: url("/img/nav-glow.svg");
+}
+
+.nav:not(.is-compact) .nav__links a:is(:hover, :focus-visible)::after,
+.nav.is-compact .nav__links a:is(:hover, :focus-visible)::before {
+  opacity: 1;
 }
 
 /* The mark and the icons are black SVGs: inverted to white over the dark end of the page. */
@@ -232,8 +325,8 @@
   top: calc(656 * var(--u));
 }
 
-/* Intro (preloader) start state, before JS takes over. */
-.is-intro .nav > *,
+/* Intro start state, before JS takes over. */
+.is-intro .nav,
 .is-intro .hero__content > * {
   visibility: hidden;
 }
@@ -870,8 +963,8 @@
   border-radius: calc(40 * var(--u));
   corner-shape: superellipse(1.585); /* Figma squircle n=3, where supported */
   background: rgb(255 255 255 / 0.3);
-  backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
+  backdrop-filter: blur(25px);
   will-change: transform, width;
 }
 
@@ -1050,12 +1143,8 @@
 .footer__links a,
 .footer__social a {
   width: fit-content;
-  transition: opacity 0.4s var(--ease-out);
-}
-
-.footer__links a:hover,
-.footer__social a:hover {
-  opacity: 0.6;
+  /* hover: the letters roll in at the old hover's 60 % (see .roll in base.css) */
+  --roll-hover: rgb(255 255 255 / 0.6);
 }
 
 .footer__legal {
